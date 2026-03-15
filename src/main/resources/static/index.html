@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello World</title>
+    <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          color: #ffffff;
+        }
+
+        .container {
+          text-align: center;
+          padding: 3rem 4rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+          font-size: 3.5rem;
+          font-weight: 700;
+          letter-spacing: -1px;
+          background: linear-gradient(90deg, #e96cfd, #56ccf2);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          margin-bottom: 1rem;
+        }
+
+        p {
+          font-size: 1.1rem;
+          color: rgba(255, 255, 255, 0.6);
+          margin-top: 0.5rem;
+        }
+
+        .dot {
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          background: #56ccf2;
+          border-radius: 50%;
+          margin: 1.5rem auto 0;
+          animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50%       { transform: scale(1.5); opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Hello, World! 👋</h1>
+    <p>Welcome to my first web page.</p>
+    <div class="dot"></div>
+</div>
+</body>
+</html>
