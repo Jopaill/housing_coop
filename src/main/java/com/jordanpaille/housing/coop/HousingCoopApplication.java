@@ -1,4 +1,4 @@
-package com.jordanpaille.housing_coop;
+package com.jordanpaille.housing.coop;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,12 +1,14 @@
-# ToDo
-1. Create a simple GetMapping Spring-boot project that displays Hello-World in the browser.
-2. Dockerize it.
-3. Find somewhere to host it and how to establish HTTPS.
-4. Host it.
-5. Establish DevOps/CI/SDLC for the next iterations
-6. Iterate (add new functionalities, push)
+# Deployments
+1. Run `gradle bootjar`
+2. Open CMD at root level and run `fly deploy`
 
-In particular, add a database layer (container)
+# ToDo
+- A first page:
+  - Have an `InMemoryUserDetailsManager`
+  - Have a homepage that requires authentication to access
+  - Have a second webpage and a link to home
+  - Use JWT authentication for the 2 pages 
+- In particular, add a database layer (container)
 
 
 # History
@@ -38,3 +40,12 @@ Then,
 * I added the `spring-boot-starter-web` dependency
 * Added some html (index.html)
 * Launched the Spring app and reached the index.html on my local
+
+## Date: 2026-03-28
+* Bought the domain coopjm.ca on Cloudflare
+* Launched my application in fly.io and configured the ipv4/6 records and https to reroute to my docker app on fly.io
+* Added a new homepage (under construction)
+* Added `spring-boot-starter-security`, `lombok`, `logback`
+* Made sure the tests ran fine
+* Configured my `logback.xml` for main and test
+* Added `spring-boot-starter-security` configurations such as the `PasswordEncoder` and the `UserDetailsManager`

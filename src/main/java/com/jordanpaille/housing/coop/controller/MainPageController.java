@@ -1,4 +1,4 @@
-package com.jordanpaille.housing_coop.controller;
+package com.jordanpaille.housing.coop.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
