@@ -3,17 +3,19 @@
 2. Open CMD at root level and run `fly deploy`
 
 # ToDo
-- A first page:
-  - Have an `InMemoryUserDetailsManager`
-  - Have a homepage that requires authentication to access
-  - Have a second webpage and a link to home
-  - Use JWT authentication for the 2 pages 
-- In particular, add a database layer (container)
+- Add a database layer (container) and store users there. 
+- Modify the UserService to fetch from DB
 
 
 # History
 
-## Date: 2026-02-07**
+## Date: 2026-04-18
+ - SecurityConfigs: Set up my SecurityFilterChain so that all requests to "/login" are permitted, but all others require JWT authentication
+ - Added the LoginController to segregate the logic
+ - Added the simple login.html
+
+
+## Date: 2026-02-07
   - Logged back into GitHub (first time in a while)
   - Cleaned up my GitHub (removed all old repos)
   - Created the `housing_coop` project with an initial commit. Chose the MIT license

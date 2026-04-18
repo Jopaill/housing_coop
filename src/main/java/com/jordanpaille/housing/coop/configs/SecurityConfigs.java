@@ -5,10 +5,15 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import jakarta.servlet.http.Cookie;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +22,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,21 +44,49 @@ public class SecurityConfigs {
     @Bean
     public UserDetailsManager userDetailsManager(PasswordEncoder encoder) {
         UserDetails u1 =  User
-                .withUsername("user")
-                .password(encoder.encode("password"))
+                .withUsername("surprise")
+                .password(encoder.encode("surprise"))
                 .roles()
                 .build();
         return new InMemoryUserDetailsManager(u1);
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public SecurityFilterChain indexFilterChain(HttpSecurity http) {
         return http
-                .httpBasic(Customizer.withDefaults())
-                .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .securityMatcher("/**")
+                .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults())
+                        .bearerTokenResolver(request -> {
+                            if ("/login".equals(request.getRequestURI())) return null;
+                            if (request.getCookies() != null) {
+                                for (Cookie c : request.getCookies()) {
+                                    if ("jwt".equals(c.getName())) return c.getValue();
+                                }
+                            }
+                            return new DefaultBearerTokenResolver().resolve(request);
+                        })
+                        .authenticationEntryPoint((httpServletRequest, response, authenticationException) ->
+                                response.sendRedirect("/login")
+                        )
+                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
+
+
+
+
+    // -------------- Below are the JWT configs --------------------------
 
     @Bean
     public KeyPair rsaKeyPair() {
