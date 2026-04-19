@@ -57,7 +57,7 @@ public class SecurityConfigs {
     }
 
     @Bean
-    public SecurityFilterChain indexFilterChain(HttpSecurity http) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         return http
                 .securityMatcher("/**")
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults())

@@ -1,13 +1,13 @@
 package com.jordanpaille.housing.coop.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,16 +22,34 @@ import java.util.List;
 public class LoginController {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtEncoder jwtEncoder; // your existing encoder
+    private final JwtEncoder jwtEncoder;
+    private final JwtDecoder jwtDecoder;
 
     public LoginController(AuthenticationManager authenticationManager,
-                           JwtEncoder jwtEncoder) {
+                           JwtEncoder jwtEncoder,
+                           JwtDecoder jwtDecoder) {
         this.authenticationManager = authenticationManager;
         this.jwtEncoder = jwtEncoder;
+        this.jwtDecoder = jwtDecoder;
     }
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie c : request.getCookies()) {
+                if ("jwt".equals(c.getName())) {
+                    try {
+                        Jwt jwt = jwtDecoder.decode(c.getValue());
+                        // If decode succeeds and token isn't expired, redirect
+                        if (jwt.getExpiresAt() != null && jwt.getExpiresAt().isAfter(Instant.now())) {
+                            return "redirect:/index";
+                        }
+                    } catch (JwtException e) {
+                        // Token invalid or expired — fall through to show login page
+                    }
+                }
+            }
+        }
         return "login";
     }
 
