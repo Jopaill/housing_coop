@@ -3,6 +3,7 @@ package com.jordanpaille.housing.coop.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -76,8 +77,15 @@ public class LoginController {
         String token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
         // 3. Set HttpOnly cookie
-        String cookie = String.format("jwt=%s; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600", token);
-        response.addHeader("Set-Cookie", cookie);
+        ResponseCookie cookie = ResponseCookie
+                .from("jwt", token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .sameSite("Lax")
+                .maxAge(3600)
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
 
         // 4. Redirect
         response.sendRedirect("/index");
