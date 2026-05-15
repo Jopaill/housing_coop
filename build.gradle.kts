@@ -33,6 +33,15 @@ dependencies {
 	compileOnly("org.projectlombok:lombok:1.18.44")
 	annotationProcessor("org.projectlombok:lombok:1.18.44")
 
+	// Email Service
+	implementation("com.mailersend:java-sdk:1.5.0")
+
+	// db
+	implementation("org.springframework.boot:spring-boot-starter-jdbc")
+	implementation("org.postgresql:postgresql")
+	runtimeOnly("com.h2database:h2")
+	implementation("org.springframework.boot:spring-boot-h2console")
+
 
 	// Test
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

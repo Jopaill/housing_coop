@@ -27,4 +27,10 @@ USER javauser
 EXPOSE 8080
 
 
-ENTRYPOINT ["java", "-XX:+UseSerialGC", "-Xss256k", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
+ENTRYPOINT ["java", \
+  "-XX:+UseSerialGC", \
+  "-Xss256k", \
+  "-XX:+UseContainerSupport", \
+  "-XX:MaxRAMPercentage=75.0", \
+  "-Dspring.profiles.active=prod", \
+  "-jar", "app.jar"]

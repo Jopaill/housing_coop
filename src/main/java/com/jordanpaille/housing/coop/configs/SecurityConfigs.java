@@ -1,21 +1,23 @@
 package com.jordanpaille.housing.coop.configs;
 
+import com.jordanpaille.housing.coop.services.UserService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import jakarta.servlet.http.Cookie;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -31,8 +33,10 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Arrays;
 import java.util.UUID;
 
+@Slf4j
 @Configuration
 public class SecurityConfigs {
 
@@ -42,13 +46,8 @@ public class SecurityConfigs {
     }
 
     @Bean
-    public UserDetailsManager userDetailsManager(PasswordEncoder encoder) {
-        UserDetails u1 =  User
-                .withUsername("surprise")
-                .password(encoder.encode("surprise"))
-                .roles()
-                .build();
-        return new InMemoryUserDetailsManager(u1);
+    public UserDetailsManager userDetailsManager(UserService userService) {
+        return new InMemoryUserDetailsManager(userService.getAllUsers());
     }
 
     @Bean
@@ -57,12 +56,18 @@ public class SecurityConfigs {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        return http
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, Environment env) {
+        boolean isDev = Arrays.asList(env.getActiveProfiles()).contains("dev");
+        log.info("Spring Active Profile(s): {}. Dev mode: {}", Arrays.toString(env.getActiveProfiles()), isDev);
+
+        http
                 .securityMatcher("/**")
-                .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults())
+                .oauth2ResourceServer(oauth -> oauth
+                        .jwt(Customizer.withDefaults())
                         .bearerTokenResolver(request -> {
-                            if ("/login".equals(request.getRequestURI())) return null;
+                            String uri = request.getRequestURI();
+                            if ("/login".equals(uri)) return null;
+                            if (isDev && (uri.equals("/h2-console") || uri.startsWith("/h2-console/"))) return null;
                             if (request.getCookies() != null) {
                                 for (Cookie c : request.getCookies()) {
                                     if ("jwt".equals(c.getName())) return c.getValue();
@@ -70,17 +75,21 @@ public class SecurityConfigs {
                             }
                             return new DefaultBearerTokenResolver().resolve(request);
                         })
-                        .authenticationEntryPoint((httpServletRequest, response, authenticationException) ->
-                                response.sendRedirect("/login")
-                        )
+                        .authenticationEntryPoint((req, res, ex) -> res.sendRedirect("/login"))
                 )
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login").permitAll()
-                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/login").permitAll();
+                    if (isDev) auth.requestMatchers("/h2-console/**").permitAll();
+                    auth.anyRequest().authenticated();
+                })
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .build();
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        if (isDev) {
+            http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
+        }
+
+        return http.build();
     }
 
 
