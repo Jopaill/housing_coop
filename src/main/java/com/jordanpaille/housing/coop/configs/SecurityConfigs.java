@@ -1,6 +1,5 @@
 package com.jordanpaille.housing.coop.configs;
 
-import com.jordanpaille.housing.coop.services.UserService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -10,7 +9,9 @@ import jakarta.servlet.http.Cookie;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -18,6 +19,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -25,15 +28,19 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -46,8 +53,32 @@ public class SecurityConfigs {
     }
 
     @Bean
-    public UserDetailsManager userDetailsManager(UserService userService) {
-        return new InMemoryUserDetailsManager(userService.getAllUsers());
+    @DependsOn("dataSourceScriptDatabaseInitializer") // Required for database initialization
+    UserDetailsManager users(DataSource dataSource, PasswordEncoder passwordEncoder) throws IOException {
+        JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
+        // Read emails from classpath
+        ClassPathResource resource = new ClassPathResource("users/emails.txt");
+        List<String> emails = Files.readAllLines(resource.getFile().toPath());
+
+        for (String email : emails) {
+            String username = email.trim();
+            if (!username.isEmpty() && !manager.userExists(username)) {
+                UserDetails user = User.builder()
+                        .username(username)
+                        .password(passwordEncoder.encode(UUID.randomUUID().toString())) // random password
+                        .disabled(true)
+                        .roles("USER")
+                        .build();
+                manager.createUser(user);
+            }
+        }
+        UserDetails user = User.builder()
+                .username("testuser")
+                .password(passwordEncoder.encode("test"))
+                .roles("USER")
+                .build();
+        manager.createUser(user);
+        return manager;
     }
 
     @Bean

@@ -9,6 +9,7 @@
   ### Login into the host and read the logs
 Open the Windows terminal at the root level of this project and run `fly ssh console`
 
+
 ## H2 Database in localhost
 After launching the app, navigate to `http://localhost:8080/h2-console`
 
@@ -21,7 +22,14 @@ After launching the app, navigate to `http://localhost:8080/h2-console`
 
 ## History
 
-### Date: 2026-05-01
+### Date: 2026-05-15
+ - Using the JdbcUserDetailsManager as a UserDetailsManager.
+ - Modified the SecurityConfigs
+ - Added application-dev.properties configs
+ - Added schema-dev.sql and deleted the content of data-dev.sql
+
+
+### Date: 2026-05-14
  - Modified the `UserDetailsManager` to get the users from the db using a new userService
  - Added a simple UserService
  - Added a `UserDao` that prints all the users during its construction
