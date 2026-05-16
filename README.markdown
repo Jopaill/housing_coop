@@ -9,6 +9,14 @@
   ### Login into the host and read the logs
 Open the Windows terminal at the root level of this project and run `fly ssh console`
 
+  ### List the secrets
+`fly secrets list`
+
+  ### To get the exact value of a secret
+```
+fly ssh console
+echo $YOUR_SECRET_NAME
+```
 
 ## H2 Database in localhost
 After launching the app, navigate to `http://localhost:8080/h2-console`
@@ -22,6 +30,20 @@ After launching the app, navigate to `http://localhost:8080/h2-console`
 
 ## History
 
+### Date: 2026-05-15 (part 2)
+Implementation of the forgot-password functionality
+- Fixed my SecurityChain to allow /forgot-password api
+- Added PasswordResetController
+- Added PasswordResetDao
+- Added PasswordResetToken
+- Created a proper EmailService
+- Modified the UserService to allow reset-password functionality
+- Added 2 html: forgot-password.html, reset-password.html
+- Added a button "forgot password" on login.html
+- Divided the schemas `schema-dev` and `schema-prod` because the H2 and PostgreSQL
+- Added more properties to dev and prod
+- Added a bit more details to the README.markdown
+- 
 ### Date: 2026-05-15
  - Using the JdbcUserDetailsManager as a UserDetailsManager.
  - Modified the SecurityConfigs

@@ -33,8 +33,9 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStreamReader;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -57,9 +58,10 @@ public class SecurityConfigs {
     UserDetailsManager users(DataSource dataSource, PasswordEncoder passwordEncoder) throws IOException {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
         // Read emails from classpath
-        ClassPathResource resource = new ClassPathResource("users/emails.txt");
-        List<String> emails = Files.readAllLines(resource.getFile().toPath());
-
+        List<String> emails;
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ClassPathResource("users/emails.txt").getInputStream()))) {
+            emails = reader.lines().toList();
+        }
         for (String email : emails) {
             String username = email.trim();
             if (!username.isEmpty() && !manager.userExists(username)) {
@@ -97,7 +99,7 @@ public class SecurityConfigs {
                         .jwt(Customizer.withDefaults())
                         .bearerTokenResolver(request -> {
                             String uri = request.getRequestURI();
-                            if ("/login".equals(uri)) return null;
+                            if ("/login".equals(uri) || "/forgot-password".equals(uri) || "/reset-password".equals(uri)) return null;
                             if (isDev && (uri.equals("/h2-console") || uri.startsWith("/h2-console/"))) return null;
                             if (request.getCookies() != null) {
                                 for (Cookie c : request.getCookies()) {
@@ -109,7 +111,7 @@ public class SecurityConfigs {
                         .authenticationEntryPoint((req, res, ex) -> res.sendRedirect("/login"))
                 )
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/login").permitAll();
+                    auth.requestMatchers("/login", "/forgot-password", "/reset-password").permitAll();
                     if (isDev) auth.requestMatchers("/h2-console/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
