@@ -3,6 +3,7 @@ package com.jordanpaille.housing.coop.services;
 import com.jordanpaille.housing.coop.dao.PasswordResetTokenDao;
 import com.jordanpaille.housing.coop.dao.UserDao;
 import com.jordanpaille.housing.coop.entity.PasswordResetToken;
+import com.jordanpaille.housing.coop.services.Email.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

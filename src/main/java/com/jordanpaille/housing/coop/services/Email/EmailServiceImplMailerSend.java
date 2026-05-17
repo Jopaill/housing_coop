@@ -1,4 +1,4 @@
-package com.jordanpaille.housing.coop.services;
+package com.jordanpaille.housing.coop.services.Email;
 
 import com.mailersend.sdk.MailerSend;
 import com.mailersend.sdk.emails.Email;
@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service
-public class EmailService {
+@Service // Commenting the @Service annotation to disable automatic bean registration
+public class EmailServiceImplMailerSend implements EmailService {
 
     private final MailerSend mailerSend = new MailerSend();
     private final String baseUrl;
 
-    public EmailService(
+    public EmailServiceImplMailerSend(
             @Value("${MAILERSEND_API_TOKEN}") String mailersendToken,
             @Value("${base-url}") String baseUrl) {
         log.info("Initializing EmailService with baseUrl: {}", baseUrl);
