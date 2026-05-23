@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "4.0.5"         // https://plugins.gradle.org/plugin/org.springframework.boot
+	id("org.springframework.boot") version "4.0.6"         // https://plugins.gradle.org/plugin/org.springframework.boot
 	id("io.spring.dependency-management") version "1.1.7"  // https://plugins.gradle.org/plugin/io.spring.dependency-management
 }
 
@@ -30,11 +30,11 @@ dependencies {
 	implementation("ch.qos.logback:logback-classic:1.5.32")                            // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
 
 	// Lombok
-	compileOnly("org.projectlombok:lombok:1.18.44")
-	annotationProcessor("org.projectlombok:lombok:1.18.44")
+	compileOnly("org.projectlombok:lombok:1.18.46")
+	annotationProcessor("org.projectlombok:lombok:1.18.46")
 
 	// Email Service
-	implementation("com.mailersend:java-sdk:1.5.0")
+	implementation("com.postmarkapp:postmark:1.13.0")
 
 	// db
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
@@ -47,8 +47,8 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testImplementation("ch.qos.logback:logback-classic:1.5.32")
-	testCompileOnly("org.projectlombok:lombok:1.18.44")
-	testAnnotationProcessor("org.projectlombok:lombok:1.18.44")
+	testCompileOnly("org.projectlombok:lombok:1.18.46")
+	testAnnotationProcessor("org.projectlombok:lombok:1.18.46")
 
 }
 

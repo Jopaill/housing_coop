@@ -11,6 +11,8 @@ Open the Windows terminal at the root level of this project and run `fly ssh con
 
   ### List the secrets
 `fly secrets list`
+`fly secrets set MY_SECRET_KEY=supersecretvalue`
+`fly secrets unset MY_SECRET_KEY`
 
   ### To get the exact value of a secret
 ```
@@ -30,11 +32,20 @@ After launching the app, navigate to `http://localhost:8080/h2-console`
 
 ## History
 
+### Date: 2026-05-22
+* In `SecurityConfigs.java`, to not add "testuser" if he's already been added
+* Removal of `EmailServiceImplMailerSend` and replacing it with `EmailServiceImplPostmark`
+* Adding Postmark configs
+* Changing the Rolling policy to monthly and lowered the amount of generated logs
+* Replaced the mail dependency
+* Changed the `restart` policy for fly.io to never restart on failure.
+* Added README details
+
 ### Date: 2026-05-17
 Adding EmailService interface and fixing teh schema-dev.sql
-- Creation of an EmailService interface. (o eventually migrate EmailService)
-- Fixing the schema-dev.sql
-- Editing the README.markdown
+* Creation of an EmailService interface. (o eventually migrate EmailService)
+* Fixing the schema-dev.sql
+* Editing the README.markdown
 
 ### Date: 2026-05-15 (part 2)
 Implementation of the forgot-password functionality

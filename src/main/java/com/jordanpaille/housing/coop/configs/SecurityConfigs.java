@@ -74,12 +74,15 @@ public class SecurityConfigs {
                 manager.createUser(user);
             }
         }
-        UserDetails user = User.builder()
-                .username("testuser")
-                .password(passwordEncoder.encode("test"))
-                .roles("USER")
-                .build();
-        manager.createUser(user);
+        String username = "testuser";
+        if (!manager.userExists(username)) {
+            UserDetails user = User.builder()
+                    .username("username")
+                    .password(passwordEncoder.encode("test"))
+                    .roles("USER")
+                    .build();
+            manager.createUser(user);
+        }
         return manager;
     }
 
