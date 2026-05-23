@@ -2,6 +2,7 @@ package com.jordanpaille.housing.coop.controller;
 
 import com.jordanpaille.housing.coop.services.UserService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +28,7 @@ public class PasswordResetController {
     }
 
     @GetMapping("/reset-password")
-    public String resetPasswordPage(@RequestParam String token, org.springframework.ui.Model model) {
+    public String resetPasswordPage(@RequestParam String token, Model model) {
         model.addAttribute("token", token);
         return "reset-password";
     }

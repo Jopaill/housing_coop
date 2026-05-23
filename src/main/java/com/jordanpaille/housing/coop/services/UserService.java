@@ -41,13 +41,6 @@ public class UserService {
     }
 
 
-    public List<UserDetails> getAllUsers() {
-        return userDao.getAllUsers();
-    }
-
-
-
-
     // ------- Reset Password Functionality ------------
     /** Step 1: Generate token & send reset email */
     public void initiatePasswordReset(String emailAddress) {

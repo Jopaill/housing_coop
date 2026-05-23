@@ -23,29 +23,31 @@ echo $YOUR_SECRET_NAME
 ## H2 Database in localhost
 After launching the app, navigate to `http://localhost:8080/h2-console`
 
+## PostgreSQL Database in Prod
+(Detail how to connect to it!)
 
 ## ToDo
- * Modify the UserService to fetch from DB
- * Add a few users (`jordan1592@outlook.com`, `jordan.paille@outlook.com`)
- * Develop the functionality to update the password with `PasswordResetToken.java` (not yet implemented)
+ * Modify how the users are initialized in the `UserDetailsManager`
+ * Come up with a definition of a Minimal Viable Product
+ * Come up with a Data Model for the coop assuming this MVP 
 
 
 ## History
 
 ### Date: 2026-05-22
-* In `SecurityConfigs.java`, to not add "testuser" if he's already been added
-* Removal of `EmailServiceImplMailerSend` and replacing it with `EmailServiceImplPostmark`
-* Adding Postmark configs
-* Changing the Rolling policy to monthly and lowered the amount of generated logs
-* Replaced the mail dependency
-* Changed the `restart` policy for fly.io to never restart on failure.
-* Added README details
+ * In `SecurityConfigs.java`, to not add "testuser" if he's already been added
+ * Removal of `EmailServiceImplMailerSend` and replacing it with `EmailServiceImplPostmark`
+ * Adding Postmark configs
+ * Changing the Rolling policy to monthly and lowered the amount of generated logs
+ * Replaced the mail dependency
+ * Changed the `restart` policy for fly.io to never restart on failure.
+ * Added README details
 
 ### Date: 2026-05-17
 Adding EmailService interface and fixing teh schema-dev.sql
-* Creation of an EmailService interface. (o eventually migrate EmailService)
-* Fixing the schema-dev.sql
-* Editing the README.markdown
+ * Creation of an EmailService interface. (o eventually migrate EmailService)
+ * Fixing the schema-dev.sql
+ * Editing the README.markdown 
 
 ### Date: 2026-05-15 (part 2)
 Implementation of the forgot-password functionality
