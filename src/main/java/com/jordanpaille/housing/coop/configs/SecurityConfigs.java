@@ -102,7 +102,15 @@ public class SecurityConfigs {
                         .jwt(Customizer.withDefaults())
                         .bearerTokenResolver(request -> {
                             String uri = request.getRequestURI();
-                            if ("/login".equals(uri) || "/forgot-password".equals(uri) || "/reset-password".equals(uri)) return null;
+                            if (
+                                    uri.equals("/login")
+                                    || uri.equals("/forgot-password")
+                                    || uri.equals("/reset-password")
+                                    || uri.startsWith("/css/")
+                                    || uri.startsWith("/js/")
+                                    || uri.startsWith("/images/")) {
+                                return null;
+                            }
                             if (isDev && (uri.equals("/h2-console") || uri.startsWith("/h2-console/"))) return null;
                             if (request.getCookies() != null) {
                                 for (Cookie c : request.getCookies()) {
@@ -114,7 +122,7 @@ public class SecurityConfigs {
                         .authenticationEntryPoint((req, res, ex) -> res.sendRedirect("/login"))
                 )
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/login", "/forgot-password", "/reset-password").permitAll();
+                    auth.requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/forgot-password", "/reset-password").permitAll();
                     if (isDev) auth.requestMatchers("/h2-console/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
