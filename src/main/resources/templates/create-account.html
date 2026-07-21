@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Créer un compte</title>
+        <link rel="stylesheet" th:href="@{/css/common.css}">
+    </head>
+
+    <body>
+        <main class="login-card">
+            <h1>Créer un compte</h1>
+
+            <div th:if="${param.sent}" class="alert">
+                Si ce courriel est sur la liste des membres, alors vous recevrez un courriel
+            </div>
+
+            <form th:action="@{/create-account}" method="post">
+                <div class="form-group">
+                    <label for="email">Courriel</label>
+                    <input id="email" type="email" name="email" required autofocus />
+                </div>
+                <button type="submit">Envoyer un lien pour réinitialiser votre mot de passe</button>
+            </form>
+
+            <p>
+                <a th:href="@{/login}" style="color: var(--primary);">Retour à connexion</a>
+            </p>
+        </main>
+    </body>
+
+</html>

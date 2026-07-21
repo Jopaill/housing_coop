@@ -23,6 +23,8 @@ public class PasswordResetController {
 
     @PostMapping("/forgot-password")
     public String handleForgotPassword(@RequestParam String email) {
+        email = email.toLowerCase();
+
         userService.initiatePasswordReset(email);
         return "redirect:/forgot-password?sent";
     }
@@ -38,5 +40,18 @@ public class PasswordResetController {
                                       @RequestParam String newPassword) {
         boolean success = userService.resetPassword(token, newPassword);
         return success ? "redirect:/login?passwordReset" : "redirect:/reset-password?error&token=" + token;
+    }
+
+    @GetMapping("/create-account")
+    public String createAccountPage() {
+        return "create-account";
+    }
+
+    @PostMapping("/create-account")
+    public String handleCreateAccountPage(@RequestParam String email) {
+        email = email.toLowerCase();
+
+        userService.initiatePasswordReset(email);
+        return "redirect:/create-account?sent";
     }
 }

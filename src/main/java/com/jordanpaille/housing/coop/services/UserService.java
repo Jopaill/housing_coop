@@ -45,7 +45,7 @@ public class UserService {
     /** Step 1: Generate token & send reset email */
     public void initiatePasswordReset(String emailAddress) {
         if (!userDetailsManager.userExists(emailAddress)) {
-            // Silently return — don't leak whether the email exists
+            log.warn("no account found for {}", emailAddress);
             return;
         }
 

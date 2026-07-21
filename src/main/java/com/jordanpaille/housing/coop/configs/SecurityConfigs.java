@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -74,15 +75,6 @@ public class SecurityConfigs {
                 manager.createUser(user);
             }
         }
-        String username = "testuser";
-        if (!manager.userExists(username)) {
-            UserDetails user = User.builder()
-                    .username("username")
-                    .password(passwordEncoder.encode("test"))
-                    .roles("USER")
-                    .build();
-            manager.createUser(user);
-        }
         return manager;
     }
 
@@ -104,11 +96,12 @@ public class SecurityConfigs {
                             String uri = request.getRequestURI();
                             if (
                                     uri.equals("/login")
-                                    || uri.equals("/forgot-password")
-                                    || uri.equals("/reset-password")
-                                    || uri.startsWith("/css/")
-                                    || uri.startsWith("/js/")
-                                    || uri.startsWith("/images/")) {
+                                            || uri.equals("/forgot-password")
+                                            || uri.equals("/reset-password")
+                                            || uri.equals("/create-account")
+                                            || uri.startsWith("/css/")
+                                            || uri.startsWith("/js/")
+                                            || uri.startsWith("/images/")) {
                                 return null;
                             }
                             if (isDev && (uri.equals("/h2-console") || uri.startsWith("/h2-console/"))) return null;
@@ -122,12 +115,27 @@ public class SecurityConfigs {
                         .authenticationEntryPoint((req, res, ex) -> res.sendRedirect("/login"))
                 )
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/forgot-password", "/reset-password").permitAll();
+                    auth.requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/forgot-password", "/reset-password", "/create-account").permitAll();
                     if (isDev) auth.requestMatchers("/h2-console/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .addLogoutHandler((request, response, authentication) -> {
+                            ResponseCookie deleteCookie = ResponseCookie.from("jwt", "")
+                                    .httpOnly(true)
+                                    .secure(true)
+                                    .path("/")
+                                    .sameSite("Lax")
+                                    .maxAge(0)
+                                    .build();
+                            response.addHeader("Set-Cookie", deleteCookie.toString());
+                        })
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
+                );
 
         if (isDev) {
             http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));

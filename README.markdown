@@ -24,7 +24,20 @@ echo $YOUR_SECRET_NAME
 After launching the app, navigate to `http://localhost:8080/h2-console`
 
 ## PostgreSQL Database in Prod
-(Detail how to connect to it!)
+Steps: 
+1. Open a terminal in the `src` folder of this project
+2. Start a local proxy to Fly Postgres app:
+   `fly proxy 5432 -a housing-coop-db`
+   or use another local port if 5432 is already busy:
+   `fly proxy 5433:5432 -a housing-coop-db` 
+   This forwards your local port to the database so DBeaver can connect to localhost.
+3. In DBeaver, create a new PostgreSQL connection with:
+   **Host**: localhost
+   **Port**: 5432 or 5433 depending on what you used
+   **Database**: usually postgres, unless your app uses a different database name
+   **Username**: usually postgres
+   **Password**: your Fly Postgres password / OPERATOR_PASSWORD if that is the one you have access to.
+
 
 ## ToDo
  * Modify how the users are initialized in the `UserDetailsManager`
@@ -33,6 +46,18 @@ After launching the app, navigate to `http://localhost:8080/h2-console`
 
 
 ## History
+
+### Date: 2026-07-20
+ * Change 0: Removing the historic "testuser" as it isn't safe and I started to add PII info
+ * Change 1: Translating..
+   * the content of the pages "forgot-password", "login.html", "reset-password" into French
+   * the email sent to reset passwords
+ * Change 2: Adding a new page "create-account" where users can create their account:
+   * Changes to SecurityConfigs chain
+   * Added the endpoints to PasswordResetController
+ * Change 3: Added logs when user tries to reset their email with a wrong email.
+ * Change 4: Added a logout feature
+ * Change 5: Added some README.md details to connect to DB from local
 
 ### Date: 2026-05-22
  * In `SecurityConfigs.java`, to not add "testuser" if he's already been added

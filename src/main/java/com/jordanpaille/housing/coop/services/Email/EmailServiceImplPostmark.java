@@ -44,7 +44,7 @@ public class EmailServiceImplPostmark implements EmailService {
 
         String resetLink = baseUrl + "/reset-password?token=" + rawToken;
         
-        Message message = new Message(fromEmail, emailAddress, subject, "<p>Click <a href=\"" + resetLink + "\">here</a> to reset your password. Link expires in 1 hour.</p>");
+        Message message = new Message(fromEmail, emailAddress, subject, "<p>Cliquer <a href=\"" + resetLink + "\">ici</a> pour réinitialiser votre mot de passe</p>");
         message.setMessageStream(postmarkMessageStream);
         try {
             MessageResponse response = client.deliverMessage(message);

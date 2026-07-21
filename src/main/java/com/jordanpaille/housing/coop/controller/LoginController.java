@@ -3,11 +3,13 @@ package com.jordanpaille.housing.coop.controller;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 
+@Slf4j
 @Controller
 public class LoginController {
 
@@ -59,6 +62,9 @@ public class LoginController {
                             @RequestParam String password,
                             HttpServletResponse response) throws IOException {
 
+        // 0. Lowercase the username
+        username = username.toLowerCase();
+
         // 1. Authenticate
         Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
@@ -91,8 +97,9 @@ public class LoginController {
         response.sendRedirect("/index");
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public String badCredentials() {
+    @ExceptionHandler(AuthenticationException.class)
+    public String authenticationException(AuthenticationException e) {
+        log.error("AuthenticationException was thrown: ", e);
         return "redirect:/login?error";
     }
 }
