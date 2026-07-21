@@ -70,10 +70,11 @@ public class LoginController {
 
         // 2. Generate JWT (reuse your existing token logic)
         Instant now = Instant.now();
+        int validityPeriodOfCookie = 2628000;
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plusSeconds(3600))        // ToDo: Properly setup expiresAt here
+                .expiresAt(now.plusSeconds(validityPeriodOfCookie))        // ToDo: Properly setup expiresAt here
                 .subject(auth.getName())
 //                .claim("scope", auth.getAuthorities().stream()
 //                        .map(GrantedAuthority::getAuthority)
@@ -89,7 +90,7 @@ public class LoginController {
                 .secure(true)
                 .path("/")
                 .sameSite("Lax")
-                .maxAge(3600)
+                .maxAge(validityPeriodOfCookie)
                 .build();
         response.addHeader("Set-Cookie", cookie.toString());
 

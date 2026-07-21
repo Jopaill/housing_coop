@@ -43,8 +43,10 @@ public class EmailServiceImplPostmark implements EmailService {
         log.info("Sending reset email to {} with rawToken: {}", emailAddress, rawToken);
 
         String resetLink = baseUrl + "/reset-password?token=" + rawToken;
+
+        String htmlEmailBody = "<p>Bonjour,<br/><br/>Cliquer <a href=\"" + resetLink + "\">ici</a> pour réinitialiser ou créer votre mot de passe.<br/><br/>Merci,<br>J</p>";
         
-        Message message = new Message(fromEmail, emailAddress, subject, "<p>Cliquer <a href=\"" + resetLink + "\">ici</a> pour réinitialiser votre mot de passe</p>");
+        Message message = new Message(fromEmail, emailAddress, subject, htmlEmailBody);
         message.setMessageStream(postmarkMessageStream);
         try {
             MessageResponse response = client.deliverMessage(message);
