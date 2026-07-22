@@ -122,3 +122,27 @@ button:active {
     font-size: 1.75rem;
   }
 }
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.password-wrapper input {
+    flex: 1;
+}
+
+.password-wrapper button {
+    cursor: pointer;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: auto;
+}
