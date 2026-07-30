@@ -1,8 +1,20 @@
 # Housing Coop project
 
 ## Deployments
+
+### Prod
 1. Run `gradle bootjar`
 2. Open CMD at root level and run `fly deploy`
+
+### Local
+Run `gradle bootRun` (if that fails, make sure to add the email secret)
+
+IntelliJ setup config changes to facilitate local dev:
+ - We enabled `Build Project Automatically`
+ - We enabled `Allow auto-make to start ...` in advanced settings
+ - `spring-boot-devtools` dependency
+ - `bootRun` Gradle configs specifies the `sourceResources` (faster updates on UI)
+ - We added an extension on Edge called `LiveReload` to see the changes more quickly
 
 ## Useful Fly Commands
 
@@ -46,6 +58,8 @@ Steps:
 
 
 ## History
+
+### Date
 
 ### Date: 2026-07-20
  * Change 0: Removing the historic "testuser" as it isn't safe and I started to add PII info
