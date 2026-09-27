@@ -1,36 +1,48 @@
 # Housing Coop project
 
+## ToDo
+* Modify how the users are initialized in the `UserDetailsManager`
+* Come up with a definition of a Minimal Viable Product
+
 ## Deployments
 
-### Prod
-1. Run `gradle bootjar`
-2. Open CMD at root level and run `fly deploy`
+    ### Prod
+    --------
+    1. Run `gradle bootjar`
+    2. Open CMD at root level and run `fly deploy`
 
-### Local
-Run `gradle bootRun` (if that fails, make sure to add the email secret)
+    ### Local - From IntelliJ
+    -------------------------
+    Run `gradle bootRun` (if that fails, make sure to add the email secret as 'VM options')
+    Note: IntelliJ setup config changes to facilitate local dev:
+     - We enabled `Build Project Automatically`
+     - We enabled `Allow auto-make to start ...` in advanced settings
+     - `spring-boot-devtools` dependency
+     - `bootRun` Gradle configs specifies the `sourceResources` (faster updates on UI)
+     - We added an extension on Edge called `LiveReload` to see the changes more quickly
 
-IntelliJ setup config changes to facilitate local dev:
- - We enabled `Build Project Automatically`
- - We enabled `Allow auto-make to start ...` in advanced settings
- - `spring-boot-devtools` dependency
- - `bootRun` Gradle configs specifies the `sourceResources` (faster updates on UI)
- - We added an extension on Edge called `LiveReload` to see the changes more quickly
+    ### Local - From terminal
+    -------------------------
+    Open the `src` folder in CMD
+    `set POSTMARK_API_TOKEN=55c462...` (See the exact value one folder up than `src` (not version controlled)
+    `gradlew bootRun
 
 ## Useful Fly Commands
 
-  ### Login into the host and read the logs
-Open the Windows terminal at the root level of this project and run `fly ssh console`
+    ### Login into the host and read the logs
+    -----------------------------------------
+    Open the Windows terminal at the root level of this project and run `fly ssh console`
 
-  ### List the secrets
-`fly secrets list`
-`fly secrets set MY_SECRET_KEY=supersecretvalue`
-`fly secrets unset MY_SECRET_KEY`
+    ### List the secrets
+    --------------------
+    `fly secrets list`
+    `fly secrets set MY_SECRET_KEY=supersecretvalue`
+    `fly secrets unset MY_SECRET_KEY`
 
-  ### To get the exact value of a secret
-```
-fly ssh console
-echo $YOUR_SECRET_NAME
-```
+    ### To get the exact value of a secret
+    --------------------
+    `fly ssh console`
+    `echo $YOUR_SECRET_NAME`
 
 ## H2 Database in localhost
 After launching the app, navigate to `http://localhost:8080/h2-console`
@@ -51,15 +63,36 @@ Steps:
    **Password**: your Fly Postgres password / OPERATOR_PASSWORD if that is the one you have access to.
 
 
-## ToDo
- * Modify how the users are initialized in the `UserDetailsManager`
- * Come up with a definition of a Minimal Viable Product
- * Come up with a Data Model for the coop assuming this MVP 
+
+
+
+
+
+
+
+
 
 
 ## History
 
-### Date
+### Date 2026-09-27
+Migration towards Tailwind CSS
+
+Generally, I didn't enjoy working with AI to generate all my frontend...
+So, I'm restarting it with Tailwind CSS.
+
+Change 1: Added a few files to help the work on the Frontend:
+* package-lock.json
+* package.json
+* .prettierrc.json
+* .prettierignore
+  Change 2: Reworked the common.css and added very few common styles
+  Change 3: Reworked the `login.html` and started to work on `create-account.html`
+
+Overall, this leaves the project kind of broken at the moment. I'll need to work a lot to put it back together, but that's okay. Here's the first commit to this goal.
+
+### Date: 2026-07-24
+Presentation of the website to the CA and agreement to eventually go live.
 
 ### Date: 2026-07-20
  * Change 0: Removing the historic "testuser" as it isn't safe and I started to add PII info

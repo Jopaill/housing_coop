@@ -1,0 +1,5 @@
+# Ignore all Java files
+**/*.java
+
+# Ignore all Kotlin script files
+**/*.kts

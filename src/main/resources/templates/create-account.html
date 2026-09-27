@@ -1,20 +1,18 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Créer un compte</title>
-        <link rel="stylesheet" th:href="@{/css/common.css}">
+        <link rel="stylesheet" th:href="@{/css/common.css}" />
     </head>
 
     <body>
         <main class="login-card">
             <h1>Créer un compte</h1>
 
-
             <div th:if="${param.sent}" class="alert">
-                Si votre adresse est valide, vous recevrez un courriel d'ici deux minutes venant de <strong>coopjm-no-reply-dev@coopjm.ca</strong><br/>
+                Si votre adresse est valide, vous recevrez un courriel d'ici deux minutes venant de <strong>coopjm-no-reply-dev@coopjm.ca</strong><br />
                 Vérifiez vos pourriels (Spam) si nécessaire.
             </div>
 
@@ -28,9 +26,8 @@
             <p>Assurez-vous d'utiliser le courriel mentionné à votre nom sur la liste des membres.</p>
             <p>Si vous éprouver des difficultés, envoyer un courriel à <strong>admin@coopjm.ca</strong></p>
             <p>
-                <a th:href="@{/login}" style="color: var(--primary);">Retour à connexion</a>
+                <a th:href="@{/login}" style="color: var(--primary)">Retour à connexion</a>
             </p>
         </main>
     </body>
-
 </html>
