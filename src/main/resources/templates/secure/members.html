@@ -275,7 +275,7 @@
                 const isSelected = member.classList.toggle("member-selected");
 
                 member.dataset.selected = String(isSelected);
-                member.classList.toggle("border-indigo-500", isSelected);
+                member.classList.toggle("border-gray-400", isSelected);
                 member.querySelector(".member-card-selectable").setAttribute("aria-pressed", String(isSelected));
                 updateSelectedEmails();
             }
@@ -319,7 +319,7 @@
             clearSelectedMembersButton.addEventListener("click", () => {
                 memberRows.forEach((member) => {
                     if (member.classList.contains("member-selected")) {
-                        member.classList.remove("member-selected", "border-indigo-500");
+                        member.classList.remove("member-selected", "border-gray-400");
                         member.dataset.selected = "false";
                         member.querySelector(".member-card-selectable").setAttribute("aria-pressed", "false");
                     }
