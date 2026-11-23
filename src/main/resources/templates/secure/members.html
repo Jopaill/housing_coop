@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="format-detection" content="telephone=no" />
+        <title>Liste des Membres</title>
+        <link rel="stylesheet" href="../../static/css/common.css" th:href="@{/css/common.css}" />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    </head>
+    <body>
+        <header class="flex justify-center border-b-2">
+            <h1 class="my-5 text-5xl font-semibold italic">
+                <span class="sm:hidden">Coop J-M</span>
+                <span class="hidden sm:inline">Coopérative Jeanne-Mance</span>
+            </h1>
+        </header>
+
+        <main class="relative flex">
+            <div class="relative flex-none">
+                <nav id="main-nav" class="absolute top-0 left-0 z-20 hidden h-dvh w-64 border-2 border-indigo-500 bg-white p-1 pt-6 md:static md:z-auto md:block md:bg-transparent">
+                    <h3 class="mb-3 text-center text-3xl font-semibold italic">Navigation</h3>
+                    <ul class="mx-1 my-2 space-y-2">
+                        <li>
+                            <a th:href="@{/membres}" class="block border p-1 hover:bg-indigo-50"> Liste des membres </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/organigramme}" class="block border p-1 hover:bg-indigo-50"> Organigramme </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/politiques}" class="block border p-1 hover:bg-indigo-50"> Politiques </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/calendrier}" class="block border p-1 hover:bg-indigo-50"> Calendrier </a>
+                        </li>
+                    </ul>
+                </nav>
+                <button id="nav-toggle" type="button" class="absolute top-1 left-0 flex flex-col gap-1.5 rounded-r-lg border-2 border-indigo-500 bg-white p-3 shadow-sm transition-all hover:bg-indigo-50 md:pointer-events-none md:sr-only md:opacity-0" aria-expanded="false" aria-controls="main-nav">
+                    <span class="block h-1 w-6 bg-indigo-500"></span>
+                    <span class="block h-1 w-6 bg-indigo-500"></span>
+                    <span class="block h-1 w-6 bg-indigo-500"></span>
+
+                    <span class="sr-only">Ouvrir ou fermer la navigation</span>
+                </button>
+            </div>
+
+            <section class="mt-8 min-w-0 flex-auto px-2 pb-60">
+                <h2 class="mb-6 text-center font-serif text-3xl font-semibold italic">Liste des Membres</h2>
+                <div class="flex">
+                    <p class="underline">Affichage:</p>
+                    <div class="mb-4 flex w-full flex-wrap justify-center gap-2">
+                        <button id="committees-toggle" type="button" class="rounded-lg border border-gray-300 bg-white px-3 py-2 hover:bg-indigo-50" aria-expanded="false">Comités</button>
+                        <button id="contact-details-toggle" type="button" class="rounded-lg border border-gray-300 bg-white px-3 py-2 hover:bg-indigo-50" aria-expanded="false">Numéro et Courriel</button>
+                    </div>
+                </div>
+                <div class="flex">
+                    <p class="underline">Filtre:</p>
+                    <div class="mb-4 flex w-full flex-wrap justify-center gap-2">
+                        <button id="external-toggle" type="button" class="rounded-lg border border-gray-300 bg-white px-3 py-2 hover:bg-indigo-50" aria-expanded="false">Externe</button>
+                        <button id="admin-filter-toggle" type="button" class="rounded-lg border border-gray-300 bg-white px-3 py-2 hover:bg-indigo-50" aria-pressed="false">Admin</button>
+                        <select id="committee-filter" aria-label="Filtre de comités" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-500">
+                            <option value="" selected>Comité...</option>
+                            <option value="Entretien">Entretien</option>
+                            <option value="Membres">Membres</option>
+                            <option value="Politiques">Politiques</option>
+                            <option value="Présidence">Présidence</option>
+                            <option value="SJMP2">SJMP2</option>
+                            <option value="Secrétariat">Secrétariat</option>
+                            <option value="Social">Social</option>
+                            <option value="Sélection">Sélection</option>
+                            <option value="Trésorerie">Trésorerie</option>
+                            <option value="Vert et blanc">Vert et blanc</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-4 flex justify-center">
+                    <p class="underline mr-1">Chercher:</p>
+                    <div class="flex w-full justify-center">
+                        <input id="member-search" type="search" autocomplete="off" placeholder="Maurice Richard" class="w-full max-w-sm rounded-lg border border-gray-300 bg-white px-3 py-2" />
+                    </div>
+                </div>
+                <ul>
+                    <li
+                        th:each="member : ${members}"
+                        th:classappend="${member.firstName == null} ? 'member-external hidden' : ''"
+                        th:attr="data-admin=${member.adminName != null},data-first-name=${member.firstName},data-last-name=${member.lastName}"
+                        data-selected="false"
+                        class="member-row flex cursor-pointer items-center gap-2 rounded-lg border border-gray-300 bg-white p-2 shadow-sm data-[selected=true]:bg-green-100"
+                    >
+                        <div class="member-card-selectable min-w-0 flex-1 rounded-md focus-visible:outline-2 focus-visible:outline-indigo-600" role="button" tabindex="0" aria-pressed="false">
+                            <p th:if="${member.adminName != null}" class="mb-1 flex min-w-0 items-center justify-center gap-1 font-semibold text-amber-600">
+                                <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path
+                                        d="M3 8L4.44293 16.6576C4.76439 18.5863 6.43315 20 8.38851 20H15.6115C17.5668 20 19.2356 18.5863 19.5571 16.6576L21 8M3 8L6.75598 11.0731C7.68373 11.8321 9.06623 11.6102 9.70978 10.5989L12 7M3 8C3.82843 8 4.5 7.32843 4.5 6.5C4.5 5.67157 3.82843 5 3 5C2.17157 5 1.5 5.67157 1.5 6.5C1.5 7.32843 2.17157 8 3 8ZM21 8L17.244 11.0731C16.3163 11.8321 14.9338 11.6102 14.2902 10.5989L12 7M21 8C21.8284 8 22.5 7.32843 22.5 6.5C22.5 5.67157 21.8284 5 21 5C20.1716 5 19.5 5.67157 19.5 6.5C19.5 7.32843 20.1716 8 21 8ZM12 7C12.8284 7 13.5 6.32843 13.5 5.5C13.5 4.67157 12.8284 4 12 4C11.1716 4 10.5 4.67157 10.5 5.5C10.5 6.32843 11.1716 7 12 7Z"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    />
+                                </svg>
+                                <span class="min-w-0 truncate" th:text="${member.adminName}"></span>
+                            </p>
+                            <div class="flex min-w-0 items-center gap-2">
+                                <p class="text-1xl min-w-0 flex-1 truncate" th:if="${member.firstName != null}" th:text="|${member.firstName} ${member.lastName}|"></p>
+                                <p class="min-w-0 flex-1 truncate text-sm" th:if="${member.firstName == null}">Locataire Externe</p>
+                                <p class="text-1xl w-18 flex-none" th:text="${member.civicNumber}"></p>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-2"></div>
+                                <div class="mr-auto w-full">
+                                    <div class="flex items-center">
+                                        <div class="mr-auto">
+                                            <p class="member-contact-details" hidden th:text="${member.phone}"></p>
+                                        </div>
+                                    </div>
+                                    <p class="member-contact-details member-email" hidden th:text="${member.email}"></p>
+                                    <ul th:if="${not #maps.isEmpty(member.committeeResponsibilityMap)}" class="member-committees" hidden>
+                                        <li th:each="entry : ${member.committeeResponsibilityMap}" class="member-committee-key" th:attr="data-committee-key=${entry.key}">
+                                            <span th:if="${#lists.isEmpty(entry.value)}" th:text="${entry.key}"></span>
+                                            <span th:unless="${#lists.isEmpty(entry.value)}" th:text="${entry.key + ' - ' + #strings.listJoin(entry.value, ', ')}"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-actions relative w-9 flex-none self-center">
+                            <button th:if="${member.firstName != null}" type="button" class="member-actions-toggle rounded-xl border-2 p-1 hover:bg-indigo-50" th:attr="aria-label=|Actions pour ${member.firstName}|" aria-expanded="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                    <circle cx="12" cy="5" r="2" />
+                                    <circle cx="12" cy="12" r="2" />
+                                    <circle cx="12" cy="19" r="2" />
+                                </svg>
+                            </button>
+                            <div th:if="${member.firstName != null}" class="member-actions-menu absolute right-0 z-30 hidden min-w-48 rounded-lg border border-gray-300 bg-white py-1 shadow-lg">
+                                <a th:if="${member.phone != null and !#strings.isEmpty(member.phone)}" th:href="|tel:${member.phone}|" th:text="|Appeler ${member.firstName}|" class="block px-3 py-2 hover:bg-indigo-50"></a>
+                                <a th:if="${member.email != null and !#strings.isEmpty(member.email)}" th:href="|mailto:${member.email}|" class="block px-3 py-2 hover:bg-indigo-50">Envoyer un courriel</a>
+                                <button th:if="${member.phone != null and !#strings.isEmpty(member.phone)}" type="button" class="member-copy-action block w-full px-3 py-2 text-left hover:bg-indigo-50" th:attr="data-copy-text=${member.phone}" data-copy-label="Copier numéro">Copier numéro</button>
+                                <button th:if="${member.email != null and !#strings.isEmpty(member.email)}" type="button" class="member-copy-action block w-full px-3 py-2 text-left hover:bg-indigo-50" th:attr="data-copy-text=${member.email}" data-copy-label="Copier courriel">Copier courriel</button>
+                            </div>
+                        </div>
+                    </li>
+                    <li th:if="${#lists.isEmpty(members)}" class="rounded-lg border border-gray-300 bg-white p-4 text-center text-gray-600">Aucun membre à afficher.</li>
+                </ul>
+                <div id="selected-emails-panel" class="mt-4 hidden rounded-lg border border-gray-300 bg-white p-3 shadow-sm">
+                    <div class="mx-auto max-w-5xl">
+                        <div class="mb-2 flex min-w-0 items-start gap-2">
+                            <p id="selected-emails-preview" class="max-h-14 min-w-0 flex-1 overflow-y-auto break-all text-xs text-gray-500" aria-live="polite">Aucun courriel sélectionné.</p>
+                            <button id="clear-selected-members" type="button" class="flex-none rounded-lg border border-red-200 bg-red-50 p-2 text-red-500 hover:bg-red-100 hover:text-red-700" aria-label="Supprimer la sélection" title="Supprimer la sélection">
+                                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                    <path d="M6 6l12 12M18 6L6 18" stroke-width="2" stroke-linecap="round" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p id="selected-member-count" class="mb-2 text-sm text-gray-600">0 membre sélectionné</p>
+                        <div class="flex items-center">
+                            <button id="copy-selected-emails" type="button" class="rounded-lg border border-gray-300 bg-white px-3 py-2 hover:bg-indigo-50 disabled:cursor-not-allowed disabled:opacity-50" disabled>Copier les courriels</button>
+                        </div>
+                        <p id="copy-selected-emails-status" class="mt-1 text-xs text-gray-600" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <script>
+            const toggleButton = document.getElementById("nav-toggle");
+            const nav = document.getElementById("main-nav");
+            const committeesToggleButton = document.getElementById("committees-toggle");
+            const committeeSections = document.querySelectorAll(".member-committees");
+            const contactDetailsToggleButton = document.getElementById("contact-details-toggle");
+            const contactDetails = document.querySelectorAll(".member-contact-details");
+            const externalToggleButton = document.getElementById("external-toggle");
+            const adminFilterToggleButton = document.getElementById("admin-filter-toggle");
+            const committeeFilter = document.getElementById("committee-filter");
+            const memberSearchInput = document.getElementById("member-search");
+            const memberRows = document.querySelectorAll(".member-row");
+            const selectedEmailsPanel = document.getElementById("selected-emails-panel");
+            const selectedEmailsPreview = document.getElementById("selected-emails-preview");
+            const selectedMemberCount = document.getElementById("selected-member-count");
+            const copySelectedEmailsButton = document.getElementById("copy-selected-emails");
+            const clearSelectedMembersButton = document.getElementById("clear-selected-members");
+            const copySelectedEmailsStatus = document.getElementById("copy-selected-emails-status");
+            const memberActionButtons = document.querySelectorAll(".member-actions-toggle");
+            const memberActionMenus = document.querySelectorAll(".member-actions-menu");
+
+            toggleButton.addEventListener("click", () => {
+                const isOpen = !nav.classList.contains("hidden");
+
+                nav.classList.toggle("hidden");
+                toggleButton.classList.toggle("left-64", !isOpen);
+                toggleButton.setAttribute("aria-expanded", String(!isOpen));
+            });
+
+            committeesToggleButton.addEventListener("click", () => {
+                const shouldShow = committeesToggleButton.getAttribute("aria-expanded") !== "true";
+
+                committeeSections.forEach((section) => {
+                    section.hidden = !shouldShow;
+                });
+                committeesToggleButton.setAttribute("aria-expanded", String(shouldShow));
+                committeesToggleButton.classList.toggle("border-indigo-500", shouldShow);
+                committeesToggleButton.classList.toggle("bg-indigo-100", shouldShow);
+            });
+
+            contactDetailsToggleButton.addEventListener("click", () => {
+                const shouldShow = contactDetailsToggleButton.getAttribute("aria-expanded") !== "true";
+
+                contactDetails.forEach((detail) => {
+                    detail.hidden = !shouldShow;
+                });
+                contactDetailsToggleButton.setAttribute("aria-expanded", String(shouldShow));
+                contactDetailsToggleButton.classList.toggle("border-indigo-500", shouldShow);
+                contactDetailsToggleButton.classList.toggle("bg-indigo-100", shouldShow);
+            });
+
+            externalToggleButton.addEventListener("click", () => {
+                const shouldShow = externalToggleButton.getAttribute("aria-expanded") !== "true";
+
+                resetCommitteeFilter();
+                if (shouldShow) {
+                    adminFilterToggleButton.setAttribute("aria-pressed", "false");
+                    adminFilterToggleButton.classList.remove("border-indigo-500", "bg-indigo-100");
+                }
+                externalToggleButton.setAttribute("aria-expanded", String(shouldShow));
+                externalToggleButton.classList.toggle("border-indigo-500", shouldShow);
+                externalToggleButton.classList.toggle("bg-indigo-100", shouldShow);
+                updateMemberVisibility();
+            });
+
+            adminFilterToggleButton.addEventListener("click", () => {
+                const shouldFilterAdmins = adminFilterToggleButton.getAttribute("aria-pressed") !== "true";
+
+                resetCommitteeFilter();
+                if (shouldFilterAdmins) {
+                    externalToggleButton.setAttribute("aria-expanded", "false");
+                    externalToggleButton.classList.remove("border-indigo-500", "bg-indigo-100");
+                }
+                adminFilterToggleButton.setAttribute("aria-pressed", String(shouldFilterAdmins));
+                adminFilterToggleButton.classList.toggle("border-indigo-500", shouldFilterAdmins);
+                adminFilterToggleButton.classList.toggle("bg-indigo-100", shouldFilterAdmins);
+                updateMemberVisibility();
+            });
+
+            committeeFilter.addEventListener("change", () => {
+                const hasCommitteeFilter = committeeFilter.value !== "";
+
+                committeeFilter.classList.toggle("text-gray-500", !hasCommitteeFilter);
+                committeeFilter.classList.toggle("text-gray-900", hasCommitteeFilter);
+                if (hasCommitteeFilter) {
+                    externalToggleButton.setAttribute("aria-expanded", "false");
+                    externalToggleButton.classList.remove("border-indigo-500", "bg-indigo-100");
+                    adminFilterToggleButton.setAttribute("aria-pressed", "false");
+                    adminFilterToggleButton.classList.remove("border-indigo-500", "bg-indigo-100");
+                }
+                updateMemberVisibility();
+            });
+
+            memberSearchInput.addEventListener("input", updateMemberVisibility);
+
+            function resetCommitteeFilter() {
+                committeeFilter.value = "";
+                committeeFilter.classList.add("text-gray-500");
+                committeeFilter.classList.remove("text-gray-900");
+            }
+
+            function updateMemberVisibility() {
+                const showExternal = externalToggleButton.getAttribute("aria-expanded") === "true";
+                const filterAdmins = adminFilterToggleButton.getAttribute("aria-pressed") === "true";
+                const selectedCommittee = committeeFilter.value;
+                const searchTerm = normalizeSearchText(memberSearchInput.value.trim());
+
+                memberRows.forEach((member) => {
+                    const isExternal = member.classList.contains("member-external");
+                    const hasAdminName = member.dataset.admin === "true";
+                    const hasCommittee = selectedCommittee === "" || Array.from(member.querySelectorAll(".member-committee-key")).some((committee) => committee.dataset.committeeKey.includes(selectedCommittee));
+                    const memberName = normalizeSearchText(`${member.dataset.firstName || ""} ${member.dataset.lastName || ""}`);
+                    const matchesSearch = searchTerm === "" || memberName.includes(searchTerm);
+
+                    const shouldHide = (selectedCommittee ? !hasCommittee : (!showExternal && isExternal) || (filterAdmins && !hasAdminName)) || !matchesSearch;
+                    member.classList.toggle("hidden", shouldHide);
+                });
+            }
+
+            function normalizeSearchText(value) {
+                return value
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .toLowerCase();
+            }
+
+            function getSelectedEmails() {
+                const emails = Array.from(memberRows)
+                    .filter((member) => member.classList.contains("member-selected"))
+                    .map((member) => {
+                        const email = member.querySelector(".member-email");
+                        return email ? email.textContent.trim() : "";
+                    })
+                    .filter((email) => email !== "");
+
+                return Array.from(new Set(emails));
+            }
+
+            function updateSelectedEmails() {
+                const selectedMembers = Array.from(memberRows).filter((member) => member.classList.contains("member-selected"));
+                const emails = getSelectedEmails();
+
+                selectedEmailsPreview.textContent = emails.length > 0 ? emails.join(", ") : "Aucun courriel sélectionné.";
+                selectedMemberCount.textContent = `${selectedMembers.length} membre${selectedMembers.length === 1 ? "" : "s"} sélectionné${selectedMembers.length === 1 ? "" : "s"}`;
+                copySelectedEmailsButton.disabled = emails.length === 0;
+                copySelectedEmailsStatus.textContent = "";
+                selectedEmailsPanel.classList.toggle("hidden", selectedMembers.length === 0);
+            }
+
+            function toggleMemberSelection(member) {
+                const isSelected = member.classList.toggle("member-selected");
+
+                member.dataset.selected = String(isSelected);
+                member.classList.toggle("border-indigo-500", isSelected);
+                member.querySelector(".member-card-selectable").setAttribute("aria-pressed", String(isSelected));
+                updateSelectedEmails();
+            }
+
+            memberRows.forEach((member) => {
+                const selectableContent = member.querySelector(".member-card-selectable");
+
+                member.addEventListener("click", (event) => {
+                    if (!event.target.closest(".member-actions")) {
+                        toggleMemberSelection(member);
+                    }
+                });
+
+                selectableContent.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        toggleMemberSelection(member);
+                    }
+                });
+            });
+
+            copySelectedEmailsButton.addEventListener("click", async () => {
+                const emails = getSelectedEmails();
+                if (emails.length === 0) {
+                    return;
+                }
+
+                try {
+                    if (!navigator.clipboard) {
+                        throw new Error("Clipboard access is unavailable.");
+                    }
+                    await navigator.clipboard.writeText(emails.join(", "));
+                    copySelectedEmailsStatus.textContent = "Courriels copiés !";
+                } catch (error) {
+                    console.error("Unable to copy selected member email addresses.", error);
+                    copySelectedEmailsStatus.textContent = "Impossible de copier. Vérifiez les permissions du navigateur.";
+                    alert("Impossible de copier. Vérifiez les permissions du navigateur.");
+                }
+            });
+
+            clearSelectedMembersButton.addEventListener("click", () => {
+                memberRows.forEach((member) => {
+                    if (member.classList.contains("member-selected")) {
+                        member.classList.remove("member-selected", "border-indigo-500");
+                        member.dataset.selected = "false";
+                        member.querySelector(".member-card-selectable").setAttribute("aria-pressed", "false");
+                    }
+                });
+                updateSelectedEmails();
+            });
+
+            function closeMemberActionMenus() {
+                memberActionMenus.forEach((menu) => {
+                    menu.classList.add("hidden");
+                    menu.parentElement.querySelector(".member-actions-toggle").setAttribute("aria-expanded", "false");
+                });
+            }
+
+            memberActionButtons.forEach((button) => {
+                button.addEventListener("click", () => {
+                    const menu = button.parentElement.querySelector(".member-actions-menu");
+                    const shouldOpen = button.getAttribute("aria-expanded") !== "true";
+
+                    closeMemberActionMenus();
+                    if (shouldOpen) {
+                        menu.classList.remove("hidden");
+                        button.setAttribute("aria-expanded", "true");
+                    }
+                });
+            });
+
+            document.addEventListener("click", (event) => {
+                if (!event.target.closest(".member-actions")) {
+                    closeMemberActionMenus();
+                }
+            });
+
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape") {
+                    const openButton = document.querySelector('.member-actions-toggle[aria-expanded="true"]');
+                    if (openButton) {
+                        closeMemberActionMenus();
+                        openButton.focus();
+                    }
+                }
+            });
+
+            document.querySelectorAll(".member-copy-action").forEach((button) => {
+                button.addEventListener("click", async () => {
+                    try {
+                        if (!navigator.clipboard) {
+                            throw new Error("Clipboard access is unavailable.");
+                        }
+                        await navigator.clipboard.writeText(button.dataset.copyText);
+                        button.textContent = "Copié !";
+                        window.setTimeout(() => {
+                            button.textContent = button.dataset.copyLabel;
+                        }, 1500);
+                    } catch (error) {
+                        console.error("Unable to copy member contact information.", error);
+                        alert("Impossible de copier. Vérifiez les permissions du navigateur.");
+                    }
+                    closeMemberActionMenus();
+                });
+            });
+
+            document.querySelectorAll(".member-actions-menu a").forEach((link) => {
+                link.addEventListener("click", closeMemberActionMenus);
+            });
+        </script>
+    </body>
+</html>

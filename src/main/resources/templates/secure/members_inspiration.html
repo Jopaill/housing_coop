@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liste des Membres</title>
+    <link rel="stylesheet" href="../../static/css/common.css" th:href="@{/css/common.css}" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+<header class="flex justify-center border-b-2">
+    <h1 class="my-5 text-5xl font-semibold italic">
+        <span class="sm:hidden">Coop J-M</span>
+        <span class="hidden sm:inline">Coopérative Jeanne-Mance</span>
+    </h1>
+</header>
+
+<main class="relative flex">
+    <div class="relative flex-none">
+        <nav id="main-nav" class="absolute top-0 left-0 z-20 hidden h-dvh w-64 border-2 border-indigo-500 bg-white p-1 pt-6 md:static md:z-auto md:block md:bg-transparent">
+            <h3 class="mb-3 text-center text-3xl font-semibold italic">Navigation</h3>
+            <ul class="mx-1 my-2 space-y-2">
+                <li>
+                    <a th:href="@{/membres}" class="block border p-1 hover:bg-indigo-50"> Liste des membres </a>
+                </li>
+                <li>
+                    <a th:href="@{/organigramme}" class="block border p-1 hover:bg-indigo-50"> Organigramme </a>
+                </li>
+                <li>
+                    <a th:href="@{/politiques}" class="block border p-1 hover:bg-indigo-50"> Politiques </a>
+                </li>
+                <li>
+                    <a th:href="@{/calendrier}" class="block border p-1 hover:bg-indigo-50"> Calendrier </a>
+                </li>
+            </ul>
+        </nav>
+        <button id="nav-toggle" type="button" class="absolute top-1 left-0 flex flex-col gap-1.5 rounded-r-lg border-2 border-indigo-500 bg-white p-3 shadow-sm transition-all hover:bg-indigo-50 md:pointer-events-none md:sr-only md:opacity-0" aria-expanded="false" aria-controls="main-nav">
+            <span class="block h-1 w-6 bg-indigo-500"></span>
+            <span class="block h-1 w-6 bg-indigo-500"></span>
+            <span class="block h-1 w-6 bg-indigo-500"></span>
+
+            <span class="sr-only">Ouvrir ou fermer la navigation</span>
+        </button>
+    </div>
+
+    <section class="mt-8 min-w-0 flex-auto px-4 pb-8">
+        <h2 class="mb-6 text-center font-serif text-3xl font-semibold italic">Liste des Membres</h2>
+        <ul class="mx-auto max-w-5xl space-y-3">
+            <li th:each="member : ${members}" class="rounded-lg border border-gray-300 bg-white p-4 shadow-sm">
+                <div class="flex items-start gap-4">
+                    <div class="flex shrink-0 items-center pt-1" th:if="${member.isMember}">
+                        <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <circle cx="12" cy="12" r="9" fill="#2ca9bc" stroke="#262626" stroke-width="1.5" />
+                            <path d="m8 12 3 3 5-5" stroke="#262626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <span class="sr-only">Membre</span>
+                    </div>
+                    <div class="flex shrink-0 items-center pt-1" th:unless="${member.isMember}">
+                        <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <circle cx="12" cy="12" r="9" stroke="#bfbfbf" stroke-width="1.5" />
+                            <path d="m8 12 3 3 5-5" stroke="#bfbfbf" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <span class="sr-only">Non-membre</span>
+                    </div>
+
+                    <div class="grid min-w-0 flex-1 grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
+                        <div>
+                            <h3 class="font-semibold" th:text="|${member.firstName} ${member.lastName}|">Prénom Nom</h3>
+                            <p class="text-sm text-gray-600">
+                                <span class="font-medium">Logement :</span>
+                                <span th:text="${member.civicNumber}">123</span>
+                            </p>
+                        </div>
+                        <p class="break-words text-sm">
+                            <span class="font-medium">Téléphone :</span>
+                            <span th:text="${member.phone}">555-555-5555</span>
+                        </p>
+                        <p class="break-words text-sm">
+                            <span class="font-medium">Courriel :</span>
+                            <span th:text="${member.email}">nom@example.com</span>
+                        </p>
+                        <div class="text-sm">
+                            <span class="font-medium">Comités :</span>
+                            <span th:if="${#lists.isEmpty(member.committees)}">Aucun</span>
+                            <span th:each="committee, status : ${member.committees}">
+                                <span th:if="${status.index > 0}">, </span><span th:text="${committee}">Comité</span>
+                            </span>
+                        </div>
+                        <div class="text-sm">
+                            <span class="font-medium">Responsabilités :</span>
+                            <span th:if="${#lists.isEmpty(member.responsibilities)}">Aucune</span>
+                            <span th:each="responsibility, status : ${member.responsibilities}">
+                                <span th:if="${status.index > 0}">, </span>
+                                <span th:text="${responsibility.responsibilityName}">Responsabilité</span>
+                                <span th:if="${responsibility.committeeName != null}" th:text="| (${responsibility.committeeName})|"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <details class="relative shrink-0">
+                        <summary class="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-full text-2xl leading-none hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-indigo-600" aria-label="Actions pour ce membre">
+                            <span aria-hidden="true">⋯</span>
+                        </summary>
+                        <div class="absolute right-0 z-10 mt-1 min-w-40 rounded-md border border-gray-300 bg-white py-1 shadow-lg">
+                            <a th:if="${member.phone != null and !#strings.isEmpty(member.phone)}"
+                               th:href="|tel:${member.phone}|"
+                               class="block px-4 py-2 text-sm text-gray-900 hover:bg-indigo-50">Appeler</a>
+                            <span th:unless="${member.phone != null and !#strings.isEmpty(member.phone)}"
+                                  class="block px-4 py-2 text-sm text-gray-400">Appeler</span>
+                            <button th:if="${member.email != null and !#strings.isEmpty(member.email)}"
+                                    type="button"
+                                    th:data-email="${member.email}"
+                                    class="copy-email block w-full px-4 py-2 text-left text-sm text-gray-900 hover:bg-indigo-50">Copier courriel</button>
+                            <span th:unless="${member.email != null and !#strings.isEmpty(member.email)}"
+                                  class="block px-4 py-2 text-sm text-gray-400">Copier courriel</span>
+                        </div>
+                    </details>
+                </div>
+                <p class="copy-status mt-2 text-sm text-gray-600" role="status" aria-live="polite"></p>
+            </li>
+            <li th:if="${#lists.isEmpty(members)}" class="rounded-lg border border-gray-300 bg-white p-4 text-center text-gray-600">
+                Aucun membre à afficher.
+            </li>
+        </ul>
+    </section>
+</main>
+
+<script>
+    const toggleButton = document.getElementById("nav-toggle");
+    const nav = document.getElementById("main-nav");
+
+    toggleButton.addEventListener("click", () => {
+        const isOpen = !nav.classList.contains("hidden");
+
+        nav.classList.toggle("hidden");
+        toggleButton.classList.toggle("left-64", !isOpen);
+        toggleButton.setAttribute("aria-expanded", String(!isOpen));
+    });
+
+    document.querySelectorAll(".copy-email").forEach((button) => {
+        button.addEventListener("click", async () => {
+            const status = button.closest("li").querySelector(".copy-status");
+            try {
+                await navigator.clipboard.writeText(button.dataset.email);
+                status.textContent = "Courriel copié.";
+            } catch (error) {
+                status.textContent = "Impossible de copier le courriel.";
+            }
+        });
+    });
+</script>
+</body>
+</html>

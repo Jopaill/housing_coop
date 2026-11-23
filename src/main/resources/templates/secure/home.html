@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Coopérative d'habitation</title>
+        <link rel="stylesheet" href="../../static/css/common.css" th:href="@{/css/common.css}" />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    </head>
+    <body>
+        <header class="flex justify-center border-b-2">
+            <h1 class="my-5 text-5xl font-semibold italic">
+                <span class="sm:hidden">Coop J-M</span>
+                <span class="hidden sm:inline">Coopérative Jeanne-Mance</span>
+            </h1>
+        </header>
+
+        <main class="relative flex">
+            <div class="relative flex-none">
+                <nav id="main-nav" class="absolute top-0 left-0 z-20 hidden h-dvh w-64 border-2 border-indigo-500 bg-white p-1 pt-6 md:static md:z-auto md:block md:bg-transparent">
+                    <h3 class="mb-3 text-center text-3xl font-semibold italic">Navigation</h3>
+                    <ul class="mx-1 my-2 space-y-2">
+                        <li>
+                            <a th:href="@{/membres}" class="block border p-1 hover:bg-indigo-50"> Liste des membres </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/organigramme}" class="block border p-1 hover:bg-indigo-50"> Organigramme </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/politiques}" class="block border p-1 hover:bg-indigo-50"> Politiques </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/calendrier}" class="block border p-1 hover:bg-indigo-50"> Calendrier </a>
+                        </li>
+                    </ul>
+                </nav>
+                <button id="nav-toggle" type="button" class="absolute top-1 left-0 flex flex-col gap-1.5 rounded-r-lg border-2 border-indigo-500 bg-white p-3 shadow-sm transition-all hover:bg-indigo-50 md:pointer-events-none md:sr-only md:opacity-0" aria-expanded="false" aria-controls="main-nav">
+                    <span class="block h-1 w-6 bg-indigo-500"></span>
+                    <span class="block h-1 w-6 bg-indigo-500"></span>
+                    <span class="block h-1 w-6 bg-indigo-500"></span>
+
+                    <span class="sr-only">Ouvrir ou fermer la navigation</span>
+                </button>
+            </div>
+
+            <section class="mt-8 flex-auto">
+                <h2 class="text-center font-serif text-3xl font-semibold italic">Annonces</h2>
+                <div class="flex flex-col items-center">
+                    <article class="m-2 w-full space-y-4 rounded-3xl border-2 bg-[#f0bfae87] p-4">
+                        <h2 class="font-display text-2xl underline underline-offset-4">🍂 La corvée d'automne</h2>
+                        <p>
+                            Le comité des Espaces verts et blancs (EVB) vous informe que la prochaine corvée d'automne aura lieu le
+                            <strong>samedi 7 novembre 2026, dès 10 h</strong>.
+                        </p>
+                        <p>Cette journée sera consacrée à la préparation de nos espaces communs pour l'arrivée de l'hiver.</p>
+                        <h3 class="font-semibold">Les principales tâches prévues sont :</h3>
+                        <ul class="list-disc space-y-1 pl-5">
+                            <li>Le ramassage des feuilles mortes</li>
+                            <li>Le nettoyage des espaces extérieurs</li>
+                            <li>Le nettoyage des crépines sur les toits</li>
+                            <li>L'installation des tapis d'hiver</li>
+                            <li>Le rangement et l'entretien des espaces communs</li>
+                        </ul>
+                        <p>
+                            <strong>Nous tenons à rappeler que la participation aux corvées est obligatoire pour les membres de la coopérative.</strong>
+                            Il s'agit d'une responsabilité collective essentielle au bon entretien de notre milieu de vie et au partage équitable des tâches.
+                        </p>
+                        <p>Nous comptons donc sur la présence et la collaboration de toutes et de tous pour assurer le bon déroulement de cette journée.</p>
+                        <p>Merci de votre engagement et de votre participation.</p>
+                        <p class="text-sm text-gray-600">Le comité des Espaces verts et blancs (EVB)</p>
+
+                        <img class="mx-auto h-auto w-full max-w-md rounded-2xl" src="../../static/images/feuille-corve-automne.jpeg" th:src="@{/images/feuille-corve-automne.jpeg}" alt="Illustration automnale de maisons encadrées par une grande feuille d'érable" />
+                    </article>
+                    <article class="m-2 w-full space-y-4 rounded-3xl border-2 bg-[#baeaf4] p-4">
+                        <h2 class="font-display text-2xl underline underline-offset-4">
+                            <span aria-hidden="true">💻</span>
+                            Création du site web
+                        </h2>
+
+                        <p>Vous avez suggestion, commentaire ou <i>bug</i> à signaler, écrivez au responsable à :</p>
+
+                        <p>
+                            <a href="mailto:admincoopjm@gmail.com?subject=Suggestion%20pour%20le%20site%20web" class="font-semibold underline underline-offset-4 hover:opacity-80"> admincoopjm@gmail.com </a>
+                        </p>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <script>
+            const toggleButton = document.getElementById("nav-toggle");
+            const nav = document.getElementById("main-nav");
+
+            toggleButton.addEventListener("click", () => {
+                const isOpen = !nav.classList.contains("hidden");
+
+                nav.classList.toggle("hidden");
+                toggleButton.classList.toggle("left-64", !isOpen);
+                toggleButton.setAttribute("aria-expanded", String(!isOpen));
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Connexion</title>
+        <link rel="stylesheet" th:href="@{/css/common.css}" />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    </head>
+
+    <body>
+        <div class="mx-auto my-4 w-[calc(100%-2rem)] max-w-100 border p-4">
+            <div class="flex justify-end pb-6">
+                <a class="text-xs underline" th:href="@{/public/create-account}">Créer un compte</a>
+            </div>
+            <h1 class="mb-12 text-center italic">Coopérative d'habitation Jeanne-Mance</h1>
+
+            <div id="login-error" class="text-xs" th:if="${param.error}">⚠️ Courriel ou mot de passe invalide</div>
+            <div class="mb-2 text-sm" role="status" th:if="${param.passwordReset}">Votre mot de passe a été changé. Vous pouvez vous connecter.</div>
+
+            <form th:action="@{/public/login}" method="post">
+                <div class="mb-2 flex items-center border-b p-1">
+                    <label class="sr-only" for="username">Courriel</label>
+                    <!-- prettier-ignore -->
+                    <svg aria-hidden="true" class="ml-1 mr-2 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="8" r="5" /> <path d="M20 21a8 8 0 0 0-16 0" /> </svg>
+                    <input class="min-w-0 flex-1 px-2" id="username" type="email" name="username" required autofocus autocomplete="username" placeholder="courriel" th:value="${username}" />
+                </div>
+                <div class="mb-5 flex items-center border-b p-1">
+                    <label class="sr-only" for="password">Mot de passe</label>
+                    <!-- prettier-ignore -->
+                    <svg aria-hidden="true" class="ml-1 mr-2 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /> <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /> </svg>
+                    <input class="min-w-0 flex-1 px-2" id="password" type="password" name="password" required autocomplete="current-password" placeholder="mot de passe" />
+                </div>
+                <div class="mb-3 flex justify-end">
+                    <a class="text-xs underline" th:href="@{/public/forgot-password}">Mot de passe oublié</a>
+                </div>
+                <div class="flex justify-center">
+                    <button class="rounded-xl border px-2" type="submit">Connexion</button>
+                </div>
+            </form>
+        </div>
+    </body>
+    <script th:if="${param.error}">
+        const emailInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const errorMessage = document.getElementById("login-error");
+
+        emailInput.addEventListener("input", () => {
+            errorMessage?.remove();
+        });
+        passwordInput.addEventListener("input", () => {
+            errorMessage?.remove();
+        });
+    </script>
+</html>

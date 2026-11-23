@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.core.env.Environment;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,7 +41,6 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,26 +55,8 @@ public class SecurityConfigs {
 
     @Bean
     @DependsOn("dataSourceScriptDatabaseInitializer") // Required for database initialization
-    UserDetailsManager users(DataSource dataSource, PasswordEncoder passwordEncoder) throws IOException {
-        JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
-        // Read emails from classpath
-        List<String> emails;
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new ClassPathResource("users/emails.txt").getInputStream()))) {
-            emails = reader.lines().toList();
-        }
-        for (String email : emails) {
-            String username = email.trim();
-            if (!username.isEmpty() && !manager.userExists(username)) {
-                UserDetails user = User.builder()
-                        .username(username)
-                        .password(passwordEncoder.encode(UUID.randomUUID().toString())) // random password
-                        .disabled(true)
-                        .roles("USER")
-                        .build();
-                manager.createUser(user);
-            }
-        }
-        return manager;
+    JdbcUserDetailsManager users(DataSource dataSource) {
+        return new JdbcUserDetailsManager(dataSource);
     }
 
     @Bean
@@ -84,9 +65,9 @@ public class SecurityConfigs {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, Environment env) {
-        boolean isDev = Arrays.asList(env.getActiveProfiles()).contains("dev");
-        log.info("Spring Active Profile(s): {}. Dev mode: {}", Arrays.toString(env.getActiveProfiles()), isDev);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, ConstantsConfigurations constants) {
+        boolean areCookiesEnabled = !constants.isDevEnvironment();
+        log.info("Setting up the SecurityFilterChain with areCookiesEnabled = {}, because constants.isDevEnvironment() = {}", areCookiesEnabled, constants.isDevEnvironment());
 
         http
                 .securityMatcher("/**")
@@ -95,16 +76,13 @@ public class SecurityConfigs {
                         .bearerTokenResolver(request -> {
                             String uri = request.getRequestURI();
                             if (
-                                    uri.equals("/login")
-                                            || uri.equals("/forgot-password")
-                                            || uri.equals("/reset-password")
-                                            || uri.equals("/create-account")
+                                    uri.startsWith("/public/")
                                             || uri.startsWith("/css/")
                                             || uri.startsWith("/js/")
                                             || uri.startsWith("/images/")) {
                                 return null;
                             }
-                            if (isDev && (uri.equals("/h2-console") || uri.startsWith("/h2-console/"))) return null;
+                            if (constants.isDevEnvironment() && (uri.equals("/h2-console") || uri.startsWith("/h2-console/"))) return null;
                             if (request.getCookies() != null) {
                                 for (Cookie c : request.getCookies()) {
                                     if ("jwt".equals(c.getName())) return c.getValue();
@@ -112,11 +90,11 @@ public class SecurityConfigs {
                             }
                             return new DefaultBearerTokenResolver().resolve(request);
                         })
-                        .authenticationEntryPoint((req, res, ex) -> res.sendRedirect("/login"))
+                        .authenticationEntryPoint((req, res, ex) -> res.sendRedirect("/public/login"))
                 )
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/css/**", "/js/**", "/images/**", "/login", "/forgot-password", "/reset-password", "/create-account").permitAll();
-                    if (isDev) auth.requestMatchers("/h2-console/**").permitAll();
+                    auth.requestMatchers("/css/**", "/js/**", "/images/**", "/public/**").permitAll();
+                    if (constants.isDevEnvironment()) auth.requestMatchers("/h2-console/**").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .csrf(AbstractHttpConfigurer::disable)
@@ -126,18 +104,18 @@ public class SecurityConfigs {
                         .addLogoutHandler((request, response, authentication) -> {
                             ResponseCookie deleteCookie = ResponseCookie.from("jwt", "")
                                     .httpOnly(true)
-                                    .secure(true)
+                                    .secure(areCookiesEnabled)
                                     .path("/")
                                     .sameSite("Lax")
                                     .maxAge(0)
                                     .build();
                             response.addHeader("Set-Cookie", deleteCookie.toString());
                         })
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/public/login?logout")
                         .permitAll()
                 );
 
-        if (isDev) {
+        if (constants.isDevEnvironment()) {
             http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         }
 

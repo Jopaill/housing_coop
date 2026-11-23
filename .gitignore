@@ -4,5 +4,4 @@ build/
 .github/
 temp/
 logs/
-/src/main/resources/users/emails.txt
 /node_modules

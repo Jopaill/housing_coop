@@ -27,3 +27,8 @@ a:link {
     color: var(--gray-6);
 }
 
+.member-actions-menu a:link,
+.member-actions-menu a:visited {
+    color: inherit;
+}
+

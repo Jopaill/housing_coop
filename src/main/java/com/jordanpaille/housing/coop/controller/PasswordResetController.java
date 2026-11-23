@@ -1,57 +1,65 @@
 package com.jordanpaille.housing.coop.controller;
 
-import com.jordanpaille.housing.coop.services.UserService;
+import com.jordanpaille.housing.coop.services.passwordreset.PasswordResetService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+@AllArgsConstructor
 @Controller
+@RequestMapping("/public")
 public class PasswordResetController {
 
-    private final UserService userService;
+    private final PasswordResetService passwordResetService;
 
-    public PasswordResetController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/forgot-password")
     public String forgotPasswordPage() {
-        return "forgot-password";
+        return "public/forgot-password";
     }
 
     @PostMapping("/forgot-password")
-    public String handleForgotPassword(@RequestParam String email) {
-        email = email.toLowerCase();
+    public String handleForgotPassword(@RequestParam String username, RedirectAttributes attributes) { // username = email
+        username = username.toLowerCase();
 
-        userService.initiatePasswordReset(email);
-        return "redirect:/forgot-password?sent";
+        passwordResetService.initiatePasswordReset(username);
+
+        attributes.addAttribute("sent", true);
+        attributes.addFlashAttribute("username", username);
+        return "redirect:/public/forgot-password";
     }
 
     @GetMapping("/reset-password")
     public String resetPasswordPage(@RequestParam String token, Model model) {
         model.addAttribute("token", token);
-        return "reset-password";
+        return "public/reset-password";
     }
 
     @PostMapping("/reset-password")
     public String handleResetPassword(@RequestParam String token,
                                       @RequestParam String newPassword) {
-        boolean success = userService.resetPassword(token, newPassword);
-        return success ? "redirect:/login?passwordReset" : "redirect:/reset-password?error&token=" + token;
+        boolean success = passwordResetService.resetPassword(token, newPassword);
+        return success ? "redirect:/public/login?passwordReset" : "redirect:/public/reset-password?error&token=" + token;
     }
 
     @GetMapping("/create-account")
     public String createAccountPage() {
-        return "create-account";
+        return "public/create-account";
     }
 
     @PostMapping("/create-account")
-    public String handleCreateAccountPage(@RequestParam String email) {
-        email = email.toLowerCase();
+    public String handleCreateAccountPage(@RequestParam String username, RedirectAttributes attributes) {
+        username = username.toLowerCase();
 
-        userService.initiatePasswordReset(email);
-        return "redirect:/create-account?sent";
+        passwordResetService.initiatePasswordReset(username);
+
+        attributes.addAttribute("sent", true);
+        attributes.addFlashAttribute("username", username);
+        return "redirect:/public/create-account";
     }
 }

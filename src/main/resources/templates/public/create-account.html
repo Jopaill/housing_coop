@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Créer un compte</title>
+        <link rel="stylesheet" th:href="@{/css/common.css}" />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    </head>
+
+    <body>
+        <div class="mx-auto my-4 w-[calc(100%-2rem)] max-w-100 border p-4">
+            <div class="flex justify-end pb-6">
+                <a class="text-xs underline" th:href="@{/public/login}">Retour à connexion</a>
+            </div>
+
+            <h1 class="mb-12 text-center italic">Créer un compte</h1>
+
+            <p class="mb-2 text-sm" th:unless="${param.sent}">Seulement les courriels de la liste des membres sont valides.</p>
+
+            <form class="mb-12" th:action="@{/public/create-account}" th:unless="${param.sent}" method="post">
+                <div class="mb-6 flex items-center border-b p-1">
+                    <label class="sr-only" for="username">Courriel</label>
+                    <!-- prettier-ignore -->
+                    <svg aria-hidden="true" class="ml-1 mr-2 w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="12" cy="8" r="5" /> <path d="M20 21a8 8 0 0 0-16 0" /> </svg>
+                    <input class="min-w-0 flex-1 px-2" id="username" type="email" name="username" required autofocus autocomplete="username" placeholder="courriel" />
+                </div>
+                <div class="flex justify-center">
+                    <button class="rounded-xl border px-2" type="submit">Envoyer le lien</button>
+                </div>
+            </form>
+
+            <div class="alert mb-6 text-sm" th:if="${param.sent}">
+                <p th:if="${username != null}">Courriel envoyé à <strong th:text="${username}"></strong></p>
+                <p>
+                    Attendre le courriel de <strong>no-reply@coopjm.ca</strong><br />
+                    Vérifiez vos pourriels (Spam)!
+                </p>
+            </div>
+
+            <div class="flex justify-end" th:unless="${param.sent}">
+                <p class="text-xs">Besoin d'aide? Envoyer un courriel à <a class="underline" href="mailto:admin@coopjm.ca">admin@coopjm.ca</a></p>
+            </div>
+        </div>
+    </body>
+</html>
