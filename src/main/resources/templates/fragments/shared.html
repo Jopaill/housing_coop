@@ -9,30 +9,30 @@
         </header>
 
         <div th:fragment="mainNavigation" class="relative flex-none">
-            <nav id="main-nav" class="absolute top-0 left-0 z-20 hidden h-dvh w-64 border-2 border-indigo-500 bg-white p-1 pt-6 md:static md:z-auto md:block md:bg-transparent">
-                <h3 class="mb-3 text-center text-3xl font-semibold italic">Navigation</h3>
-                <ul class="mx-1 my-2 space-y-2">
-                    <li>
-                        <a th:href="@{/home}" class="block border p-1 hover:bg-indigo-50"> Accueil </a>
+            <nav id="main-nav" class="absolute top-0 left-0 z-20 hidden h-dvh w-64 border-2 border-black bg-white p-1 pt-6 md:static md:z-auto md:block md:bg-transparent">
+                <h3 class="mb-3 text-center text-xl font-semibold italic text-gray-600">Navigation</h3>
+                <ul class="mx-1 my-2 divide-y divide-gray-300">
+                    <li class="py-1">
+                        <a th:href="@{/home}" class="block py-1 hover:bg-gray-100"> Accueil </a>
                     </li>
-                    <li>
-                        <a th:href="@{/membres}" class="block border p-1 hover:bg-indigo-50"> Liste des membres </a>
+                    <li class="py-1">
+                        <a th:href="@{/membres}" class="block py-1 hover:bg-gray-100"> Liste des membres </a>
                     </li>
-                    <li>
-                        <a th:href="@{/organigramme}" class="block border p-1 hover:bg-indigo-50"> Organigramme </a>
+                    <li class="py-1">
+                        <a th:href="@{/organigramme}" class="block py-1 hover:bg-gray-100"> Organigramme </a>
                     </li>
-                    <li>
-                        <a th:href="@{/politiques}" class="block border p-1 hover:bg-indigo-50"> Politiques </a>
+                    <li class="py-1">
+                        <a th:href="@{/politiques}" class="block py-1 hover:bg-gray-100"> Politiques </a>
                     </li>
-                    <li>
-                        <a th:href="@{/calendrier}" class="block border p-1 hover:bg-indigo-50"> Calendrier </a>
+                    <li class="py-1">
+                        <a th:href="@{/calendrier}" class="block py-1 hover:bg-gray-100"> Calendrier </a>
                     </li>
                 </ul>
             </nav>
-            <button id="nav-toggle" type="button" class="absolute top-1 left-0 flex flex-col gap-1.5 rounded-r-lg border-2 border-indigo-500 bg-white p-3 shadow-sm transition-all hover:bg-indigo-50 md:pointer-events-none md:sr-only md:opacity-0" aria-expanded="false" aria-controls="main-nav">
-                <span class="block h-1 w-6 bg-indigo-500"></span>
-                <span class="block h-1 w-6 bg-indigo-500"></span>
-                <span class="block h-1 w-6 bg-indigo-500"></span>
+            <button id="nav-toggle" type="button" class="absolute top-1 left-0 flex flex-col gap-1.5 rounded-r-lg border-2 border-black bg-white p-3 shadow-sm transition-all hover:bg-gray-100 md:pointer-events-none md:sr-only md:opacity-0" aria-expanded="false" aria-controls="main-nav">
+                <span class="block h-1 w-6 bg-black"></span>
+                <span class="block h-1 w-6 bg-black"></span>
+                <span class="block h-1 w-6 bg-black"></span>
 
                 <span class="sr-only">Ouvrir ou fermer la navigation</span>
             </button>
