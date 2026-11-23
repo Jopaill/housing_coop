@@ -6,42 +6,13 @@
         <title>Coopérative d'habitation</title>
         <link rel="stylesheet" href="../../static/css/common.css" th:href="@{/css/common.css}" />
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <script th:src="@{/js/navigation.js}" defer></script>
     </head>
     <body>
-        <header class="flex justify-center border-b-2">
-            <h1 class="my-5 text-5xl font-semibold italic">
-                <span class="sm:hidden">Coop J-M</span>
-                <span class="hidden sm:inline">Coopérative Jeanne-Mance</span>
-            </h1>
-        </header>
+        <header th:replace="~{fragments/shared :: siteHeader}"></header>
 
         <main class="relative flex">
-            <div class="relative flex-none">
-                <nav id="main-nav" class="absolute top-0 left-0 z-20 hidden h-dvh w-64 border-2 border-indigo-500 bg-white p-1 pt-6 md:static md:z-auto md:block md:bg-transparent">
-                    <h3 class="mb-3 text-center text-3xl font-semibold italic">Navigation</h3>
-                    <ul class="mx-1 my-2 space-y-2">
-                        <li>
-                            <a th:href="@{/membres}" class="block border p-1 hover:bg-indigo-50"> Liste des membres </a>
-                        </li>
-                        <li>
-                            <a th:href="@{/organigramme}" class="block border p-1 hover:bg-indigo-50"> Organigramme </a>
-                        </li>
-                        <li>
-                            <a th:href="@{/politiques}" class="block border p-1 hover:bg-indigo-50"> Politiques </a>
-                        </li>
-                        <li>
-                            <a th:href="@{/calendrier}" class="block border p-1 hover:bg-indigo-50"> Calendrier </a>
-                        </li>
-                    </ul>
-                </nav>
-                <button id="nav-toggle" type="button" class="absolute top-1 left-0 flex flex-col gap-1.5 rounded-r-lg border-2 border-indigo-500 bg-white p-3 shadow-sm transition-all hover:bg-indigo-50 md:pointer-events-none md:sr-only md:opacity-0" aria-expanded="false" aria-controls="main-nav">
-                    <span class="block h-1 w-6 bg-indigo-500"></span>
-                    <span class="block h-1 w-6 bg-indigo-500"></span>
-                    <span class="block h-1 w-6 bg-indigo-500"></span>
-
-                    <span class="sr-only">Ouvrir ou fermer la navigation</span>
-                </button>
-            </div>
+            <div th:replace="~{fragments/shared :: mainNavigation}"></div>
 
             <section class="mt-8 flex-auto">
                 <h2 class="text-center font-serif text-3xl font-semibold italic">Annonces</h2>
@@ -87,17 +58,5 @@
             </section>
         </main>
 
-        <script>
-            const toggleButton = document.getElementById("nav-toggle");
-            const nav = document.getElementById("main-nav");
-
-            toggleButton.addEventListener("click", () => {
-                const isOpen = !nav.classList.contains("hidden");
-
-                nav.classList.toggle("hidden");
-                toggleButton.classList.toggle("left-64", !isOpen);
-                toggleButton.setAttribute("aria-expanded", String(!isOpen));
-            });
-        </script>
     </body>
 </html>
