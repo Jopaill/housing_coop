@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
     <body>
-        <header th:fragment="siteHeader" class="flex justify-center border-b-2">
-            <h1 class="my-5 text-5xl font-semibold italic">
+        <header th:fragment="siteHeader" class="flex justify-center border-b-2 bg-[var(--coop-green-400)]">
+            <h1 class="my-5 text-5xl font-semibold italic text-[var(--coop-orange-600)]">
                 <span class="sm:hidden">Coop J-M</span>
                 <span class="hidden sm:inline">Coopérative Jeanne-Mance</span>
             </h1>
         </header>
 
         <div th:fragment="mainNavigation" class="relative flex-none">
-            <nav id="main-nav" class="absolute top-0 left-0 z-20 hidden h-dvh w-64 border-2 border-black bg-white p-1 pt-6 md:static md:z-auto md:block md:bg-transparent">
-                <h3 class="mb-3 text-center text-xl font-semibold italic text-gray-600">Navigation</h3>
+            <nav id="main-nav" class="absolute top-0 left-0 z-20 hidden h-dvh w-64 border-x-2 border-b-2 border-black bg-white p-1 pt-6 md:static md:z-auto md:block md:bg-transparent">
+                <h3 class="mb-3 text-center text-xl font-semibold italic">Navigation</h3>
                 <ul class="mx-1 my-2 divide-y divide-gray-300">
                     <li class="py-1">
                         <a th:href="@{/home}" class="block py-1 hover:bg-gray-100"> Accueil </a>

@@ -1,6 +1,60 @@
 @import "tailwindcss";
 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 :root {
+    --coop-orange-50: color-mix(in srgb, #ce7f20 5%, white);
+    --coop-orange-100: color-mix(in srgb, #ce7f20 10%, white);
+    --coop-orange-200: color-mix(in srgb, #ce7f20 20%, white);
+    --coop-orange-300: color-mix(in srgb, #ce7f20 40%, white);
+    --coop-orange-400: color-mix(in srgb, #ce7f20 70%, white);
+    --coop-orange-500: #ce7f20;
+    --coop-orange-600: color-mix(in srgb, #ce7f20 85%, black);
+    --coop-orange-700: color-mix(in srgb, #ce7f20 70%, black);
+    --coop-orange-800: color-mix(in srgb, #ce7f20 50%, black);
+    --coop-orange-900: color-mix(in srgb, #ce7f20 25%, black);
+    --coop-orange-950: color-mix(in srgb, #ce7f20 10%, black);
+
+    --coop-pink-50: color-mix(in srgb, #eedfc7 5%, white);
+    --coop-pink-100: color-mix(in srgb, #eedfc7 10%, white);
+    --coop-pink-200: color-mix(in srgb, #eedfc7 20%, white);
+    --coop-pink-300: color-mix(in srgb, #eedfc7 40%, white);
+    --coop-pink-400: color-mix(in srgb, #eedfc7 70%, white);
+    --coop-pink-500: #eedfc7;
+    --coop-pink-600: color-mix(in srgb, #eedfc7 85%, black);
+    --coop-pink-700: color-mix(in srgb, #eedfc7 70%, black);
+    --coop-pink-800: color-mix(in srgb, #eedfc7 50%, black);
+    --coop-pink-900: color-mix(in srgb, #eedfc7 25%, black);
+    --coop-pink-950: color-mix(in srgb, #eedfc7 10%, black);
+
+    --coop-green-50: color-mix(in srgb, #607938 5%, white);
+    --coop-green-100: color-mix(in srgb, #607938 10%, white);
+    --coop-green-200: color-mix(in srgb, #607938 20%, white);
+    --coop-green-300: color-mix(in srgb, #607938 40%, white);
+    --coop-green-400: color-mix(in srgb, #607938 70%, white);
+    --coop-green-500: #607938;
+    --coop-green-600: color-mix(in srgb, #607938 85%, black);
+    --coop-green-700: color-mix(in srgb, #607938 70%, black);
+    --coop-green-800: color-mix(in srgb, #607938 50%, black);
+    --coop-green-900: color-mix(in srgb, #607938 25%, black);
+    --coop-green-950: color-mix(in srgb, #607938 10%, black);
+
+    --coop-brown-50: color-mix(in srgb, #533416 5%, white);
+    --coop-brown-100: color-mix(in srgb, #533416 10%, white);
+    --coop-brown-200: color-mix(in srgb, #533416 20%, white);
+    --coop-brown-300: color-mix(in srgb, #533416 40%, white);
+    --coop-brown-400: color-mix(in srgb, #533416 70%, white);
+    --coop-brown-500: #533416;
+    --coop-brown-600: color-mix(in srgb, #533416 85%, black);
+    --coop-brown-700: color-mix(in srgb, #533416 70%, black);
+    --coop-brown-800: color-mix(in srgb, #533416 50%, black);
+    --coop-brown-900: color-mix(in srgb, #533416 25%, black);
+    --coop-brown-950: color-mix(in srgb, #533416 10%, black);
+
     --gray-1: #f2f2f2; /* very light */
     --gray-2: #e0e0e0;
     --gray-3: #cccccc;
@@ -12,23 +66,11 @@
     --gray-9: #262626; /* very dark */
 }
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
-
 body {
-    background-color: var(--gray-1);
-    color: var(--gray-9);
+    background-color: var(--coop-pink-400);
+    color: var(--coop-green-700);
 }
 
 a:link {
-    color: var(--gray-6);
+    color: var(--coop-orange-500);
 }
-
-.member-actions-menu a:link,
-.member-actions-menu a:visited {
-    color: inherit;
-}
-
