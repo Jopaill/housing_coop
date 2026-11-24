@@ -89,6 +89,27 @@ button:hover,
     background-color: var(--coop-orange-300);
 }
 
+#clear-selected-members {
+    background-color: #fee2e2;
+    border-color: #fecaca;
+    color: #ef4444;
+}
+
+#clear-selected-members:hover {
+    background-color: #fecaca;
+    color: #b91c1c;
+}
+
+#copy-selected-emails {
+    background-color: var(--coop-green-100);
+    border-color: var(--coop-green-300);
+    color: var(--coop-green-700);
+}
+
+#copy-selected-emails:hover {
+    background-color: var(--coop-green-200);
+}
+
 button:active:not(:disabled),
 #committee-filter:active {
     transform: translateY(1px) scale(0.98);
@@ -123,4 +144,29 @@ a:active {
 a:focus-visible {
     outline: 2px solid var(--coop-orange-600);
     outline-offset: 2px;
+}
+
+.member-actions-menu a {
+    background-color: var(--coop-orange-200);
+    color: var(--coop-orange-500);
+    transition:
+        background-color 120ms ease,
+        box-shadow 120ms ease,
+        color 120ms ease,
+        transform 120ms ease;
+}
+
+.member-actions-menu a:hover,
+.member-actions-menu a:active {
+    background-color: var(--coop-orange-300);
+    color: var(--coop-orange-500);
+}
+
+.member-actions-menu a:active {
+    transform: translateY(1px) scale(0.98);
+    box-shadow: inset 0 2px 4px rgb(83 52 22 / 25%);
+}
+
+.member-actions-menu > * + * {
+    border-top: 1px solid #d1d5db;
 }

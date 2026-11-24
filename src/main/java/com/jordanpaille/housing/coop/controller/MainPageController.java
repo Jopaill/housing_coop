@@ -29,21 +29,9 @@ public class MainPageController {
         return "secure/members";
     }
 
-    @GetMapping("/organigramme")
-    public String organigramme(Model model) {
-        model.addAttribute("title", "Organigramme");
-        return "secure/in-construction";
-    }
-
     @GetMapping("/politiques")
     public String politiques(Model model) {
         model.addAttribute("title", "Politiques");
-        return "secure/in-construction";
-    }
-
-    @GetMapping("/calendrier")
-    public String calendrier(Model model) {
-        model.addAttribute("title", "Calendrier");
         return "secure/in-construction";
     }
 

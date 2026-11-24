@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Slf4j
-@Service
+//@Service
 public class EmailServiceImplPostmark implements EmailService {
 
     private final String postmarkMessageStream;

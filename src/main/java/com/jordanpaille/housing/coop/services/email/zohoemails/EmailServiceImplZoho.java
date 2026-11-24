@@ -13,7 +13,7 @@ import static com.jordanpaille.housing.coop.services.passwordreset.PasswordReset
 
 
 @Slf4j
-//@Service
+@Service
 public class EmailServiceImplZoho implements EmailService {
 
     private final RestClient restClient;
