@@ -32,18 +32,7 @@ public class MainPageController {
     @GetMapping("/politiques")
     public String politiques(Model model) {
         model.addAttribute("title", "Politiques");
-        return "secure/in-construction";
+        return "secure/politiques";
     }
 
-    @GetMapping("/comites")
-    public String comites(Model model) {
-        model.addAttribute("title", "Liste des comités");
-        return "secure/in-construction";
-    }
-
-    @GetMapping("/roles")
-    public String roles(Model model) {
-        model.addAttribute("title", "Rôles et tâches à faire");
-        return "secure/in-construction";
-    }
 }
