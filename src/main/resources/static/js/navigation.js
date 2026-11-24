@@ -5,6 +5,6 @@ toggleButton.addEventListener("click", () => {
     const isOpen = !nav.classList.contains("hidden");
 
     nav.classList.toggle("hidden");
-    toggleButton.classList.toggle("left-64", !isOpen);
+    toggleButton.classList.toggle("left-48", !isOpen);
     toggleButton.setAttribute("aria-expanded", String(!isOpen));
 });
