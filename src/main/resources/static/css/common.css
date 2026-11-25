@@ -196,3 +196,29 @@ a:focus-visible {
 .member-actions-menu > * + * {
     border-top: 1px solid #d1d5db;
 }
+
+.announcement-body--collapsed {
+    position: relative;
+    max-height: 12rem;
+    overflow: hidden;
+}
+
+.announcement-body--collapsed::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2rem;
+    background: linear-gradient(transparent, var(--coop-pink-400));
+    content: "";
+    pointer-events: none;
+}
+
+.announcement-toggle {
+    align-self: center;
+}
+
+.announcement-toggle:focus-visible {
+    outline: 2px solid var(--coop-orange-600);
+    outline-offset: 2px;
+}

@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="../../static/css/common.css" th:href="@{/css/common.css}" />
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
         <script th:src="@{/js/navigation.js}" defer></script>
+        <script th:src="@{/js/announcement-expander.js}" defer></script>
     </head>
     <body>
         <header th:replace="~{fragments/shared :: siteHeader}"></header>
@@ -18,20 +19,18 @@
                 <h2 class="text-center font-serif text-3xl font-semibold italic">Annonces</h2>
                 <div class="flex flex-col items-center px-3">
                     <article th:each="announcement : ${announcements}" class="m-2 w-full space-y-4 rounded-3xl border-2 p-4">
-                        <div class="flex flex-wrap items-baseline justify-between gap-2">
-                            <h3 class="font-display text-2xl underline underline-offset-4" th:text="${announcement.title}">Titre de l'annonce</h3>
-                            <p class="text-sm text-gray-600">
-                                <span th:text="${announcement.author}">Auteur</span>
-                                <span aria-hidden="true"> · </span>
-                                <time th:datetime="${announcement.publishedAt}" th:text="${#temporals.format(announcement.publishedAt, 'dd/MM/yyyy')}">25/11/2026</time>
-                            </p>
-                        </div>
-                        <div class="space-y-4" th:utext="${announcement.bodyHtml}"></div>
+                        <h3 class="font-display mb-1 text-2xl" th:text="${announcement.title}">Titre de l'annonce</h3>
+                        <p class="text-sm text-gray-600">
+                            <span th:text="${announcement.author}">Auteur</span>
+                            <span aria-hidden="true"> · </span>
+                            <time th:datetime="${announcement.publishedAt}" th:text="${#temporals.format(announcement.publishedAt, 'd MMMM yyyy', new java.util.Locale('fr'))}">25 novembre 2026</time>
+                        </p>
+                        <div class="announcement-body space-y-4" th:utext="${announcement.bodyHtml}"></div>
+                        <button type="button" class="announcement-toggle rounded-full px-3 py-1 text-xl" aria-expanded="false" aria-label="Afficher la suite de l'annonce" hidden>...</button>
                     </article>
                     <p th:if="${#lists.isEmpty(announcements)}" class="m-2 w-full text-center">Aucune annonce pour le moment.</p>
                 </div>
             </section>
         </main>
-
     </body>
 </html>

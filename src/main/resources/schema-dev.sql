@@ -133,6 +133,32 @@ SELECT
 
 
 
+INSERT INTO announcements (published_at, author, title, body_markdown)
+SELECT
+    CURRENT_DATE,
+    'Jopaille',
+    'Exemple d''annonce longue (démo)',
+    'Cette annonce de démonstration sert à vérifier le comportement des annonces longues sur la page d''accueil. Lorsque le texte dépasse la hauteur prévue, il est tronqué et un bouton « ... » permet de lire la suite. Cette entrée est uniquement destinée à l''environnement de développement.
+
+La coopérative souhaite garder ses communications faciles à consulter sur ordinateur, tablette et téléphone. Les annonces courtes restent entièrement visibles, tandis que les textes plus détaillés peuvent être repliés afin que les autres nouvelles restent accessibles sans devoir parcourir une page trop longue. Le bouton permet d''ouvrir le texte complet, puis de le replier lorsque la lecture est terminée.
+
+## Informations à retenir
+
+- Le titre, l''auteur et la date de publication apparaissent au-dessus du contenu.
+- Le corps de l''annonce accepte du Markdown, notamment des paragraphes, des titres, des liens et des listes.
+- Les liens et les éléments HTML produits sont filtrés avant d''être affichés.
+- Les annonces sont classées de la plus récente à la plus ancienne.
+
+Pour tester le comportement, ouvrez la page d''accueil et repérez cette annonce. Elle devrait être nettement plus longue que les annonces normales. Cliquez sur les trois points pour afficher le reste du message. Le libellé du bouton devient alors « Réduire »; cliquez de nouveau pour replier le texte.
+
+Les autres annonces de cette base de développement sont conservées afin de comparer leur affichage avec celui de cette entrée. Cette annonce ne représente pas une activité réelle et peut être supprimée une fois la vérification terminée.'
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM announcements
+    WHERE author = 'Jopaille'
+      AND title = 'Exemple d''annonce longue (démo)'
+);
+
 INSERT INTO apartments
 (civic_number)
 VALUES
