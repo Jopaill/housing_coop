@@ -15,7 +15,7 @@ public class MemberDtoTransformer {
 
             MemberDoc currentMemberDoc = civicNumberToEntityMap.computeIfAbsent(
                     memberDto.civicNumber(),
-                    civicNumber -> new MemberDoc.Builder()
+                    civicNumber -> MemberDoc.builder()
                             .civicNumber(civicNumber)
                             .firstName(memberDto.firstName())
                             .lastName(memberDto.lastName())
@@ -23,7 +23,9 @@ public class MemberDtoTransformer {
                             .email(memberDto.email())
                             .isMember(memberDto.isMember())
                             .admin(memberDto.adminName())
-                            .build());
+                            .committeeResponsibilityMap(new HashMap<>())
+                            .build()
+            );
 
             currentMemberDoc.addCommitteeIfNotNullAndNotAlreadyPresent(memberDto.committee());
             currentMemberDoc.addResponsibilityIfNotNullAndNotAlreadyPresent(memberDto.responsibility(), memberDto.responsibilityCommittee());
@@ -33,3 +35,13 @@ public class MemberDtoTransformer {
         return memberList;
     }
 }
+
+//                            .builder()
+//                            .civicNumber(civicNumber)
+//                            .firstName(memberDto.firstName())
+//                            .lastName(memberDto.lastName())
+//                            .phone(memberDto.phone())
+//                            .email(memberDto.email())
+//                            .isMember(memberDto.isMember())
+//                            .admin(memberDto.adminName())
+//                            .build());
