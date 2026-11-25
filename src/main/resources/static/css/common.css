@@ -89,6 +89,32 @@ button:hover,
     background-color: var(--coop-orange-300);
 }
 
+#committee-filter.text-gray-900 {
+    background-color: var(--coop-green-700);
+    border-color: var(--coop-green-700);
+    color: var(--coop-pink-400);
+}
+
+#committee-filter option {
+    background-color: var(--coop-orange-200);
+    color: var(--coop-orange-500);
+}
+
+#member-search:not(:placeholder-shown) {
+    background-color: var(--coop-green-700);
+    border-color: var(--coop-green-700);
+    color: var(--coop-pink-400);
+}
+
+#committees-toggle[aria-expanded="true"],
+#contact-details-toggle[aria-expanded="true"],
+#external-toggle[aria-expanded="true"],
+#admin-filter-toggle[aria-pressed="true"] {
+    background-color: var(--coop-green-700);
+    border-color: var(--coop-green-700);
+    color: var(--coop-pink-400);
+}
+
 #clear-selected-members {
     background-color: #fee2e2;
     border-color: #fecaca;
