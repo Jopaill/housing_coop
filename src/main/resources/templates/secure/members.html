@@ -56,13 +56,13 @@
                 <ul class="space-y-1">
                     <li
                         th:each="member : ${members}"
-                        th:classappend="${member.isMember == false} ? 'member-external hidden' : ''"
-                        th:attr="data-admin=${member.adminName != null},data-is-member=${member.isMember},data-first-name=${member.firstName},data-last-name=${member.lastName}"
+                        th:classappend="${member.isMember == false and member.isEmpty == false} ? 'member-external hidden' : ''"
+                        th:attr="data-admin=${member.admin != null},data-is-member=${member.isMember},data-is-empty=${member.isEmpty},data-first-name=${member.firstName},data-last-name=${member.lastName}"
                         data-selected="false"
-                        class="member-row group flex min-h-10 cursor-pointer items-stretch gap-2 rounded-lg border border-gray-300 bg-white shadow-sm data-[selected=true]:border-[var(--coop-green-700)] data-[selected=true]:bg-[var(--coop-green-700)] data-[selected=true]:text-[var(--coop-pink-400)]"
+                        class="member-row group flex min-h-10 cursor-pointer items-stretch gap-2 rounded-lg border border-gray-300 bg-white shadow-sm data-[is-empty=true]:cursor-default data-[selected=true]:border-[var(--coop-green-700)] data-[selected=true]:bg-[var(--coop-green-700)] data-[selected=true]:text-[var(--coop-pink-400)]"
                     >
-                        <div class="member-card-selectable flex min-w-0 flex-1 flex-col justify-center rounded-md pl-2 focus-visible:outline-2 focus-visible:outline-indigo-600" role="button" tabindex="0" aria-pressed="false">
-                            <p th:if="${member.adminName != null}" class="mb-1 flex min-w-0 items-center justify-center gap-1 font-semibold text-[var(--coop-orange-500)] group-data-[selected=true]:text-[var(--coop-orange-300)]">
+                        <div class="member-card-selectable flex min-w-0 flex-1 flex-col justify-center rounded-md pl-2 focus-visible:outline-2 focus-visible:outline-indigo-600" th:attr="role=${member.isEmpty ? null : 'button'},tabindex=${member.isEmpty ? null : '0'},aria-pressed=${member.isEmpty ? null : 'false'}">
+                            <p th:if="${member.admin != null and member.isEmpty == false}" class="mb-1 flex min-w-0 items-center justify-center gap-1 font-semibold text-[var(--coop-orange-500)] group-data-[selected=true]:text-[var(--coop-orange-300)]">
                                 <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path
                                         d="M3 8L4.44293 16.6576C4.76439 18.5863 6.43315 20 8.38851 20H15.6115C17.5668 20 19.2356 18.5863 19.5571 16.6576L21 8M3 8L6.75598 11.0731C7.68373 11.8321 9.06623 11.6102 9.70978 10.5989L12 7M3 8C3.82843 8 4.5 7.32843 4.5 6.5C4.5 5.67157 3.82843 5 3 5C2.17157 5 1.5 5.67157 1.5 6.5C1.5 7.32843 2.17157 8 3 8ZM21 8L17.244 11.0731C16.3163 11.8321 14.9338 11.6102 14.2902 10.5989L12 7M21 8C21.8284 8 22.5 7.32843 22.5 6.5C22.5 5.67157 21.8284 5 21 5C20.1716 5 19.5 5.67157 19.5 6.5C19.5 7.32843 20.1716 8 21 8ZM12 7C12.8284 7 13.5 6.32843 13.5 5.5C13.5 4.67157 12.8284 4 12 4C11.1716 4 10.5 4.67157 10.5 5.5C10.5 6.32843 11.1716 7 12 7Z"
@@ -72,11 +72,12 @@
                                         stroke-linejoin="round"
                                     />
                                 </svg>
-                                <span class="min-w-0 truncate" th:text="${member.adminName}"></span>
+                                <span class="min-w-0 truncate" th:text="${member.admin}"></span>
                             </p>
                             <div class="flex min-w-0 items-center gap-2">
-                                <p class="text-1xl min-w-0 flex-1 truncate" th:if="${member.isMember == true}" th:text="|${member.firstName} ${member.lastName}|"></p>
-                                <p class="min-w-0 flex-1 truncate text-sm" th:if="${member.isMember == false}">Locataire Externe</p>
+                                <p class="text-1xl min-w-0 flex-1 truncate" th:if="${member.isEmpty == true}">⚒️ Vide / Rénovation</p>
+                                <p class="text-1xl min-w-0 flex-1 truncate" th:if="${member.isEmpty == false and member.isMember == true}" th:text="|🏘️ ${member.firstName} ${member.lastName}|"></p>
+                                <p class="min-w-0 flex-1 truncate text-sm" th:if="${member.isEmpty == false and member.isMember == false}">⛷️ Locataire Externe</p>
                                 <p class="text-1xl w-18 flex-none" th:text="${member.civicNumber}"></p>
                             </div>
                             <div class="flex items-center">
@@ -97,7 +98,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="member-actions relative flex flex-none items-center self-stretch border-l border-gray-300 group-data-[selected=true]:border-[var(--coop-green-700)]">
+                        <div th:if="${member.isEmpty == false}" class="member-actions relative flex flex-none items-center self-stretch border-l border-gray-300 group-data-[selected=true]:border-[var(--coop-green-700)]">
                             <button
                                 th:if="${member.isMember == true}"
                                 type="button"
@@ -242,7 +243,8 @@
                 const searchTerm = normalizeSearchText(memberSearchInput.value.trim());
 
                 memberRows.forEach((member) => {
-                    const isExternal = member.dataset.isMember === "false";
+                    const isEmpty = member.dataset.isEmpty === "true";
+                    const isExternal = member.dataset.isMember === "false" && !isEmpty;
                     const hasAdminName = member.dataset.admin === "true";
                     const hasCommittee = selectedCommittee === "" || Array.from(member.querySelectorAll(".member-committee-key")).some((committee) => committee.dataset.committeeKey.includes(selectedCommittee));
                     const memberName = normalizeSearchText(`${member.dataset.firstName || ""} ${member.dataset.lastName || ""}`);
@@ -262,7 +264,7 @@
 
             function getSelectedEmails() {
                 const emails = Array.from(memberRows)
-                    .filter((member) => member.dataset.isMember === "true" && member.classList.contains("member-selected"))
+                    .filter((member) => member.dataset.isMember === "true" && member.dataset.isEmpty !== "true" && member.classList.contains("member-selected"))
                     .map((member) => {
                         const email = member.querySelector(".member-email");
                         return email ? email.textContent.trim() : "";
@@ -273,7 +275,7 @@
             }
 
             function updateSelectedEmails() {
-                const selectedMembers = Array.from(memberRows).filter((member) => member.dataset.isMember === "true" && member.classList.contains("member-selected"));
+                const selectedMembers = Array.from(memberRows).filter((member) => member.dataset.isMember === "true" && member.dataset.isEmpty !== "true" && member.classList.contains("member-selected"));
                 const emails = getSelectedEmails();
 
                 selectedEmailsPreview.textContent = emails.length > 0 ? emails.join(", ") : "Aucun courriel sélectionné.";
@@ -284,7 +286,7 @@
             }
 
             function toggleMemberSelection(member) {
-                if (member.dataset.isMember !== "true") {
+                if (member.dataset.isMember !== "true" || member.dataset.isEmpty === "true") {
                     return;
                 }
 
@@ -297,7 +299,7 @@
 
             selectVisibleMembersButton.addEventListener("click", () => {
                 memberRows.forEach((member) => {
-                    if (member.dataset.isMember !== "true" || member.classList.contains("hidden")) {
+                    if (member.dataset.isMember !== "true" || member.dataset.isEmpty === "true" || member.classList.contains("hidden")) {
                         return;
                     }
 

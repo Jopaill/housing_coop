@@ -22,6 +22,7 @@ public class MemberDtoTransformer {
                             .phone(memberDto.phone())
                             .email(memberDto.email())
                             .isMember(memberDto.isMember())
+                            .isEmpty(null == memberDto.firstName()) // When an apartment is empty, the `LEFT JOIN person` results in `FIRST_NAME = NULL`
                             .admin(memberDto.adminName())
                             .committeeResponsibilityMap(new HashMap<>())
                             .build()
@@ -30,18 +31,7 @@ public class MemberDtoTransformer {
             currentMemberDoc.addCommitteeIfNotNullAndNotAlreadyPresent(memberDto.committee());
             currentMemberDoc.addResponsibilityIfNotNullAndNotAlreadyPresent(memberDto.responsibility(), memberDto.responsibilityCommittee());
         }
-        List<MemberDoc> memberList = new ArrayList<>(civicNumberToEntityMap.values());
 
-        return memberList;
+        return new ArrayList<>(civicNumberToEntityMap.values());
     }
 }
-
-//                            .builder()
-//                            .civicNumber(civicNumber)
-//                            .firstName(memberDto.firstName())
-//                            .lastName(memberDto.lastName())
-//                            .phone(memberDto.phone())
-//                            .email(memberDto.email())
-//                            .isMember(memberDto.isMember())
-//                            .admin(memberDto.adminName())
-//                            .build());
