@@ -1,6 +1,5 @@
 package com.jordanpaille.housing.coop.controller;
 
-import com.jordanpaille.housing.coop.dao.memberlist.MemberListDao;
 import com.jordanpaille.housing.coop.services.memberlist.MemberListService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;

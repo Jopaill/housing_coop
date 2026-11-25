@@ -11,7 +11,7 @@ public record MemberDoc(
         String lastName,
         String phone,
         String email,
-        Boolean isMember,
+        boolean isMember,
         String adminName,
         Map<String, List<String>> committeeResponsibilityMap
 ) {

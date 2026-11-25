@@ -9,7 +9,7 @@ public record MemberDto(
         String lastName,
         String phone,
         String email,
-        Boolean isMember,
+        boolean isMember,
         String adminName,
         String committee,
         String responsibility,

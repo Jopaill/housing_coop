@@ -1,7 +1,7 @@
 package com.jordanpaille.housing.coop.runner;
 
-import com.jordanpaille.housing.coop.dao.memberlist.MemberListDao;
 import com.jordanpaille.housing.coop.entity.MemberDoc;
+import com.jordanpaille.housing.coop.services.memberlist.MemberListService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -17,7 +17,7 @@ import java.util.List;
 public class Runner implements CommandLineRunner {
 
     private static final String del = "*************************************************************************";
-    private final MemberListDao memberListDao;
+    private final MemberListService memberListService;
 
     @Override
     public void run(String... args) {
@@ -26,7 +26,7 @@ public class Runner implements CommandLineRunner {
         log.info(del);
         log.info(del);
         log.info(del);
-        List<MemberDoc> list = memberListDao.getMemberList();
+        List<MemberDoc> list = memberListService.getMemberList();
         log.info("The size of list is: {}", list.size());
 
         for (MemberDoc row : list) {

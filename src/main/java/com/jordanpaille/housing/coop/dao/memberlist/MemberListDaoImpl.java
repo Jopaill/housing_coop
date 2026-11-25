@@ -1,6 +1,5 @@
 package com.jordanpaille.housing.coop.dao.memberlist;
 
-import com.jordanpaille.housing.coop.entity.MemberDoc;
 import com.jordanpaille.housing.coop.entity.MemberDto;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,7 +14,7 @@ public class MemberListDaoImpl implements MemberListDao {
     private final NamedParameterJdbcTemplate jdbc;
 
     @Override
-    public List<MemberDoc> getMemberList() {
+    public List<MemberDto> getMemberList() {
         String sql = """
                 SELECT
                     a.civic_number,
@@ -41,7 +40,8 @@ public class MemberListDaoImpl implements MemberListDao {
                     LEFT JOIN committees c2 ON r.committee_id = c2.committee_id
                 ORDER BY a.civic_number
                 """;
-        List<MemberDto> memberList = jdbc.query(sql, rs -> {
+
+        return jdbc.query(sql, rs -> {
             List<MemberDto> memberListToReturn = new ArrayList<>();
 
             while (rs.next()) {
@@ -51,7 +51,7 @@ public class MemberListDaoImpl implements MemberListDao {
                         .lastName(rs.getString("last_name"))
                         .phone(rs.getString("phone"))
                         .email(rs.getString("EMAIL"))
-                        .isMember(rs.getBoolean("is_member"))
+                        .isMember(rs.getBoolean("is_member")) // Note: getBoolean results to 'false' when value is null (see getBoolean() docs)
                         .adminName(rs.getString("admin_name"))
                         .committee(rs.getString("committee_name"))
                         .responsibility(rs.getString("responsibility_name"))
@@ -61,37 +61,6 @@ public class MemberListDaoImpl implements MemberListDao {
             }
             return memberListToReturn;
         });
-
-        Map<String, MemberDoc> civicNumberToMemberMap = jdbc.query(sql, rs -> {
-            Map<String, MemberDoc> civicNumberToMemberMapConstruct = new HashMap<>();
-
-            while (rs.next()) {
-                String currentCivicNumber = rs.getString("CIVIC_NUMBER");
-
-                MemberDoc member = civicNumberToMemberMapConstruct.get(currentCivicNumber);
-
-                if (null == member) {
-                    member = new MemberDoc.Builder()
-                            .civicNumber(rs.getString("CIVIC_NUMBER"))
-                            .firstName(rs.getString("FIRST_NAME"))
-                            .lastName(rs.getString("LAST_NAME"))
-                            .phone(rs.getString("PHONE"))
-                            .email(rs.getString("EMAIL"))
-                            .isMember(rs.getBoolean("IS_MEMBER"))
-                            .admin(rs.getString("ADMIN_NAME"))
-                            .build();
-                    civicNumberToMemberMapConstruct.put(currentCivicNumber, member);
-                }
-                member.addCommitteeIfNotNullAndNotAlreadyPresent(rs.getString("COMMITTEE_NAME"));
-                member.addResponsibilityIfNotNullAndNotAlreadyPresent(rs.getString("RESPONSIBILITY_NAME"), rs.getString("RESPONSIBILITY_COMMITTEE"));
-            }
-            return civicNumberToMemberMapConstruct;
-        });
-        List<MemberDoc> orderedMemberList = new ArrayList<>(civicNumberToMemberMap.values());
-
-        orderedMemberList.sort(Comparator.comparing(MemberDoc::civicNumber));
-
-        return orderedMemberList;
     }
 }
 
