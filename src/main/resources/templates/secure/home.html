@@ -8,6 +8,7 @@
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
         <script th:src="@{/js/navigation.js}" defer></script>
         <script th:src="@{/js/announcement-expander.js}" defer></script>
+        <script th:src="@{/js/announcement-composer.js}" defer></script>
     </head>
     <body>
         <header th:replace="~{fragments/shared :: siteHeader}"></header>
@@ -16,7 +17,11 @@
             <div th:replace="~{fragments/shared :: mainNavigation}"></div>
 
             <section class="mt-8 flex-auto">
-                <h2 class="text-center font-serif text-3xl font-semibold italic">Annonces</h2>
+                <div class="home-announcements-heading">
+                    <h2 class="flex-1 text-center font-serif text-3xl font-semibold italic">Annonces</h2>
+                    <button id="open-announcement-dialog" type="button" th:if="${canPublishPost}">Écrire</button>
+                </div>
+                <p th:if="${announcementSuccess}" class="mx-3 text-center" role="status" th:text="${announcementSuccess}"></p>
                 <div class="flex flex-col items-center px-3">
                     <article th:each="announcement : ${announcements}" class="m-2 w-full space-y-4 rounded-3xl border-2 p-4">
                         <h3 class="font-display mb-1 text-2xl" th:text="${announcement.title}">Titre de l'annonce</h3>
@@ -32,5 +37,54 @@
                 </div>
             </section>
         </main>
+
+        <dialog id="announcement-dialog" class="announcement-dialog" th:if="${canPublishPost}" th:attr="data-open=${openAnnouncementDialog}" aria-labelledby="announcement-dialog-title">
+            <div class="announcement-dialog-header">
+                <h2 id="announcement-dialog-title" class="font-serif text-2xl font-semibold">Écrire une annonce</h2>
+                <button id="close-announcement-dialog" type="button" class="rounded-lg border p-2" aria-label="Annuler l'écriture" title="Annuler l'écriture">
+                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                        <path d="M6 6l12 12M18 6L6 18" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+
+            <p th:if="${announcementError}" class="announcement-form-error" role="alert" th:text="${announcementError}"></p>
+
+            <form id="announcement-form" method="post" th:action="@{/home/announcements}">
+                <div class="announcement-form-field">
+                    <label for="announcement-title">Titre</label>
+                    <input id="announcement-title" name="title" type="text" maxlength="40" required
+                           th:value="${draftTitle}" aria-describedby="announcement-title-help" />
+                    <p id="announcement-title-help" class="announcement-field-help">40 caractères maximum.</p>
+                </div>
+
+                <div class="announcement-form-field">
+                    <div class="announcement-body-label">
+                        <label for="announcement-body-markdown">Texte</label>
+                        <output id="announcement-body-count" aria-live="polite" hidden></output>
+                    </div>
+                    <div id="announcement-markdown-editor">
+                        <div class="announcement-markdown-toolbar" role="toolbar" aria-label="Mise en forme Markdown">
+                            <button type="button" data-markdown-action="bold" title="Gras">Gras</button>
+                            <button type="button" data-markdown-action="italic" title="Italique">Italique</button>
+                            <button type="button" data-markdown-action="bullets" title="Liste à puces">• Liste</button>
+                            <button type="button" data-markdown-action="numbered" title="Liste numérotée">1. Liste</button>
+                        </div>
+                        <textarea id="announcement-body-markdown" name="bodyMarkdown" maxlength="4000" required
+                                  aria-describedby="announcement-body-help"
+                                  th:text="${draftBody}"></textarea>
+                    </div>
+                    <p id="announcement-editor-error" class="announcement-form-error" role="alert" hidden></p>
+                    <div id="announcement-markdown-preview" class="announcement-preview space-y-4" hidden></div>
+                    <p id="announcement-body-help" class="announcement-field-help">Markdown · 4 000 caractères maximum.</p>
+                    <p id="announcement-preview-error" class="announcement-form-error" role="alert" hidden></p>
+                </div>
+
+                <div class="announcement-form-footer">
+                    <button id="announcement-preview-toggle" type="button" aria-pressed="false">Aperçu</button>
+                    <button id="announcement-publish-button" type="submit" class="rounded-lg border px-3 py-2">Publier</button>
+                </div>
+            </form>
+        </dialog>
     </body>
 </html>

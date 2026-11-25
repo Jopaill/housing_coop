@@ -115,25 +115,42 @@ button:hover,
     color: var(--coop-pink-400);
 }
 
-#clear-selected-members {
+#clear-selected-members,
+#close-announcement-dialog {
     background-color: #fee2e2;
     border-color: #fecaca;
     color: #ef4444;
 }
 
-#clear-selected-members:hover {
+#clear-selected-members:hover,
+#close-announcement-dialog:hover {
     background-color: #fecaca;
     color: #b91c1c;
 }
 
-#copy-selected-emails {
+#copy-selected-emails,
+#announcement-publish-button {
     background-color: var(--coop-green-100);
     border-color: var(--coop-green-300);
     color: var(--coop-green-700);
 }
 
-#copy-selected-emails:hover {
+#copy-selected-emails:hover,
+#announcement-publish-button:hover {
     background-color: var(--coop-green-200);
+}
+
+#open-announcement-dialog {
+    border: 0;
+    padding: 0.25rem;
+    background: transparent;
+    color: var(--coop-orange-500);
+    text-decoration: underline;
+}
+
+#open-announcement-dialog:hover {
+    background: transparent;
+    color: var(--coop-orange-700);
 }
 
 button:active:not(:disabled),
@@ -221,4 +238,112 @@ a:focus-visible {
 .announcement-toggle:focus-visible {
     outline: 2px solid var(--coop-orange-600);
     outline-offset: 2px;
+}
+
+.home-announcements-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0 0 1.5rem;
+    padding: 0 0.75rem;
+}
+
+.announcement-dialog {
+    width: min(96vw, 72rem);
+    max-width: none;
+    max-height: 92vh;
+    max-height: 92dvh;
+    overflow-y: auto;
+    padding: 1.25rem;
+    border: 2px solid var(--coop-green-500);
+    border-radius: 1.5rem;
+    background: var(--coop-pink-400);
+    color: var(--coop-green-700);
+}
+
+.announcement-dialog::backdrop {
+    background: rgb(0 0 0 / 55%);
+}
+
+.announcement-dialog-header,
+.announcement-body-label,
+.announcement-form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.announcement-dialog-header {
+    margin-bottom: 1.25rem;
+}
+
+.announcement-form-field {
+    margin-bottom: 1rem;
+}
+
+.announcement-form-field > label,
+.announcement-body-label > label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+#announcement-title,
+#announcement-body-markdown {
+    width: 100%;
+    border: 1px solid var(--coop-orange-400);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    background: white;
+    color: var(--coop-green-700);
+}
+
+#announcement-body-markdown {
+    min-height: min(42vh, 32rem);
+    resize: vertical;
+}
+
+.announcement-field-help {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.announcement-markdown-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.announcement-markdown-toolbar button,
+#announcement-preview-toggle {
+    border: 1px solid var(--coop-orange-400);
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.7rem;
+}
+
+#announcement-body-count {
+    font-size: 0.875rem;
+}
+
+.announcement-preview {
+    min-height: min(42vh, 32rem);
+    max-height: 42vh;
+    overflow-y: auto;
+    border: 1px solid var(--coop-orange-400);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    background: white;
+    color: var(--coop-green-700);
+}
+
+.announcement-form-error {
+    margin-bottom: 1rem;
+    color: #b91c1c;
+}
+
+.announcement-form-footer {
+    justify-content: flex-end;
 }

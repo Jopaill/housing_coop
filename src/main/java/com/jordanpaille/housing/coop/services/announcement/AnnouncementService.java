@@ -7,4 +7,10 @@ import java.util.List;
 public interface AnnouncementService {
 
     List<AnnouncementDoc> getAnnouncements();
+
+    String renderMarkdownPreview(String bodyMarkdown);
+
+    void publishPost(String title, String bodyMarkdown, String username);
+
+    boolean canPublishPost(String username);
 }

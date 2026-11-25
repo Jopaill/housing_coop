@@ -1,8 +1,10 @@
 package com.jordanpaille.housing.coop.services.announcement;
 
 import com.jordanpaille.housing.coop.dao.announcement.AnnouncementDao;
+import com.jordanpaille.housing.coop.dao.person.PersonDao;
 import com.jordanpaille.housing.coop.entity.Announcement;
 import com.jordanpaille.housing.coop.entity.AnnouncementDoc;
+import com.jordanpaille.housing.coop.entity.PersonName;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.commonmark.parser.Parser;
@@ -11,6 +13,7 @@ import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +22,8 @@ import java.util.List;
 @Service
 public class AnnouncementServiceImpl implements AnnouncementService {
 
+    private static final int MAX_TITLE_LENGTH = 40;
+    private static final int MAX_BODY_LENGTH = 4000;
     private static final Parser MARKDOWN_PARSER = Parser.builder().build();
     private static final HtmlRenderer HTML_RENDERER = HtmlRenderer.builder().escapeHtml(true).build();
     private static final PolicyFactory HTML_POLICY = new HtmlPolicyBuilder()
@@ -29,6 +34,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
             .toFactory();
 
     private final AnnouncementDao announcementDao;
+    private final PersonDao personDao;
 
     @Override
     public List<AnnouncementDoc> getAnnouncements() {
@@ -50,6 +56,53 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return List.copyOf(announcements);
     }
 
+    @Override
+    public String renderMarkdownPreview(String bodyMarkdown) {
+        if (bodyMarkdown == null) {
+            throw new IllegalArgumentException("Le texte est obligatoire.");
+        }
+        if (bodyMarkdown.length() > MAX_BODY_LENGTH) {
+            throw new IllegalArgumentException("Le texte ne peut pas dépasser 4 000 caractères.");
+        }
+
+        return renderSafeMarkdown(bodyMarkdown);
+    }
+
+    @Override
+    public void publishPost(String title, String bodyMarkdown, String username) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Le titre est obligatoire.");
+        }
+        if (title.length() > MAX_TITLE_LENGTH) {
+            throw new IllegalArgumentException("Le titre ne peut pas dépasser 40 caractères.");
+        }
+        if (bodyMarkdown == null || bodyMarkdown.isBlank()) {
+            throw new IllegalArgumentException("Le texte est obligatoire.");
+        }
+        if (bodyMarkdown.length() > MAX_BODY_LENGTH) {
+            throw new IllegalArgumentException("Le texte ne peut pas dépasser 4 000 caractères.");
+        }
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("Le compte connecté est introuvable.");
+        }
+
+        PersonName author = personDao.findMemberNameByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Votre compte n'est pas associé à un membre."));
+        announcementDao.insertAnnouncement(
+                LocalDate.now(),
+                author.firstName() + " " + author.lastName(),
+                title.strip(),
+                bodyMarkdown
+        );
+    }
+
+    @Override
+    public boolean canPublishPost(String username) {
+        return username != null
+                && !username.isBlank()
+                && personDao.findMemberNameByUsername(username).isPresent();
+    }
+
     private AnnouncementDoc toAnnouncementDoc(Announcement announcement) {
         if (announcement.publishedAt() == null
                 || announcement.author() == null
@@ -58,14 +111,16 @@ public class AnnouncementServiceImpl implements AnnouncementService {
             throw new IllegalArgumentException("Announcement fields must not be null");
         }
 
-        String renderedMarkdown = HTML_RENDERER.render(MARKDOWN_PARSER.parse(announcement.bodyMarkdown()));
-        String safeBodyHtml = HTML_POLICY.sanitize(renderedMarkdown);
-
         return new AnnouncementDoc(
                 announcement.publishedAt(),
                 announcement.author(),
                 announcement.title(),
-                safeBodyHtml
+                renderSafeMarkdown(announcement.bodyMarkdown())
         );
+    }
+
+    private String renderSafeMarkdown(String bodyMarkdown) {
+        String renderedMarkdown = HTML_RENDERER.render(MARKDOWN_PARSER.parse(bodyMarkdown));
+        return HTML_POLICY.sanitize(renderedMarkdown);
     }
 }

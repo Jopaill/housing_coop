@@ -2,9 +2,12 @@ package com.jordanpaille.housing.coop.dao.announcement;
 
 import com.jordanpaille.housing.coop.entity.Announcement;
 import lombok.AllArgsConstructor;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,5 +48,22 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
 
             return announcements;
         });
+    }
+
+    @Override
+    public void insertAnnouncement(LocalDate publishedAt, String author, String title, String bodyMarkdown) {
+        String sql = """
+                INSERT INTO announcements
+                    (published_at, author, title, body_markdown)
+                VALUES
+                    (:published_at, :author, :title, :body_markdown)
+                """;
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("published_at", Date.valueOf(publishedAt))
+                .addValue("author", author)
+                .addValue("title", title)
+                .addValue("body_markdown", bodyMarkdown);
+
+        jdbc.update(sql, params);
     }
 }
