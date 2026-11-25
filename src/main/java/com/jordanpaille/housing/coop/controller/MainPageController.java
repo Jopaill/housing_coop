@@ -1,5 +1,6 @@
 package com.jordanpaille.housing.coop.controller;
 
+import com.jordanpaille.housing.coop.services.announcement.AnnouncementService;
 import com.jordanpaille.housing.coop.services.memberlist.MemberListService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainPageController {
 
     private final MemberListService memberListService;
+    private final AnnouncementService announcementService;
 
     @GetMapping("/")
     public String root() {
@@ -18,7 +20,8 @@ public class MainPageController {
     }
 
     @GetMapping("/home")
-    public String helloWorld() {
+    public String helloWorld(Model model) {
+        model.addAttribute("announcements", announcementService.getAnnouncements());
         return "secure/home";
     }
 

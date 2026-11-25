@@ -17,25 +17,18 @@
             <section class="mt-8 flex-auto">
                 <h2 class="text-center font-serif text-3xl font-semibold italic">Annonces</h2>
                 <div class="flex flex-col items-center px-3">
-                    <article class="m-2 w-full space-y-4 rounded-3xl border-2 p-4">
-                        <h2 class="font-display text-2xl underline underline-offset-4">🍂 La corvée d'automne</h2>
-                        <p>
-                            Le comité des Espaces verts et blancs (EVB) vous informe que la prochaine corvée d'automne aura lieu le
-                            <strong>samedi 7 novembre 2026, dès 10 h</strong>.
-                        </p>
+                    <article th:each="announcement : ${announcements}" class="m-2 w-full space-y-4 rounded-3xl border-2 p-4">
+                        <div class="flex flex-wrap items-baseline justify-between gap-2">
+                            <h3 class="font-display text-2xl underline underline-offset-4" th:text="${announcement.title}">Titre de l'annonce</h3>
+                            <p class="text-sm text-gray-600">
+                                <span th:text="${announcement.author}">Auteur</span>
+                                <span aria-hidden="true"> · </span>
+                                <time th:datetime="${announcement.publishedAt}" th:text="${#temporals.format(announcement.publishedAt, 'dd/MM/yyyy')}">25/11/2026</time>
+                            </p>
+                        </div>
+                        <div class="space-y-4" th:utext="${announcement.bodyHtml}"></div>
                     </article>
-                    <article class="m-2 w-full space-y-4 rounded-3xl border-2 p-4">
-                        <h2 class="font-display text-2xl underline underline-offset-4">
-                            <span aria-hidden="true">💻</span>
-                            Création du site web
-                        </h2>
-
-                        <p>Vous avez suggestion, commentaire ou <i>bug</i> à signaler, écrivez à :</p>
-
-                        <p>
-                            <a href="mailto:admincoopjm@gmail.com?subject=Suggestion%20pour%20le%20site%20web" class="font-semibold underline underline-offset-4 hover:opacity-80"> admincoopjm@gmail.com </a>
-                        </p>
-                    </article>
+                    <p th:if="${#lists.isEmpty(announcements)}" class="m-2 w-full text-center">Aucune annonce pour le moment.</p>
                 </div>
             </section>
         </main>

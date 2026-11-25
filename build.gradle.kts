@@ -26,6 +26,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	implementation("org.commonmark:commonmark:0.33.0")
+	implementation("com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20261110.1")
 
 	// Logging
 	implementation("ch.qos.logback:logback-classic:1.5.32")                            // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
