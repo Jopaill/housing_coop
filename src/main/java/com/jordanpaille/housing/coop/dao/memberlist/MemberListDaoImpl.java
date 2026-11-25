@@ -49,11 +49,10 @@ public class MemberListDaoImpl implements MemberListDao {
                 Member member = civicNumberToMemberMapConstruct.get(currentCivicNumber);
 
                 if (null == member) {
-                    boolean isPresent = null != rs.getString("FIRST_NAME");
                     member = new Member.Builder()
                             .civicNumber(rs.getString("CIVIC_NUMBER"))
                             .firstName(rs.getString("FIRST_NAME"))
-                            .lastName(isPresent ? rs.getString("LAST_NAME") : "Locataire Externe")
+                            .lastName(rs.getString("LAST_NAME"))
                             .phone(rs.getString("PHONE"))
                             .email(rs.getString("EMAIL"))
                             .isMember(rs.getBoolean("IS_MEMBER"))

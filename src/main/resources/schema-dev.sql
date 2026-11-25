@@ -206,7 +206,8 @@ values
     ('martin.simard41@exemple.dev', '123', FALSE),
     ('celine.dion42@exemple.dev', '123', FALSE),
     ('thomas.beaulieu43@exemple.dev', '123', FALSE),
-    ('nathalie.lemieux44@exemple.dev', '123', FALSE);
+    ('nathalie.lemieux44@exemple.dev', '123', FALSE),
+    ('not_a_real_email', '123', FALSE);
 
 INSERT INTO authorities
     (username, authority)
@@ -304,7 +305,8 @@ VALUES
     ('celine.dion42@exemple.dev', 'Céline', 'Dion', '(438) 766-1188', TRUE),
     ('thomas.beaulieu43@exemple.dev', 'Thomas', 'Beaulieu', '(514) 898-9797', TRUE),
     ('nathalie.lemieux44@exemple.dev', 'Nathalie', 'Lemieux', '(438) 987-6573', TRUE),
-    ('philippe.lariviere45@exemple.dev', 'Philippe', 'Larivière', '(514) 500-8123', TRUE);
+    ('philippe.lariviere45@exemple.dev', 'Philippe', 'Larivière', '(514) 500-8123', TRUE),
+    ('not_a_real_email', 'Locataire', 'Externe', NULL, FALSE);
 
 INSERT INTO person_apartment
     (person_id, apartment_id)
@@ -353,7 +355,16 @@ VALUES
     ((SELECT person_id FROM persons WHERE username = 'thomas.beaulieu43@exemple.dev'), (SELECT apartment_id FROM apartments WHERE civic_number = '2088-3')),
     ((SELECT person_id FROM persons WHERE username = 'nathalie.lemieux44@exemple.dev'), (SELECT apartment_id FROM apartments WHERE civic_number = '2090-2')),
     ((SELECT person_id FROM persons WHERE username = 'philippe.lariviere45@exemple.dev'), (SELECT apartment_id FROM apartments WHERE civic_number = '2090-3')),
-    ((SELECT person_id FROM persons WHERE username = 'simon.gagnon33@exemple.dev'), (SELECT apartment_id FROM apartments WHERE civic_number = '2092-SS'));
+    ((SELECT person_id FROM persons WHERE username = 'not_a_real_email'), (SELECT apartment_id FROM apartments WHERE civic_number = '2022-SS')),
+    ((SELECT person_id FROM persons WHERE username = 'not_a_real_email'), (SELECT apartment_id FROM apartments WHERE civic_number = '2024-SS')),
+    ((SELECT person_id FROM persons WHERE username = 'not_a_real_email'), (SELECT apartment_id FROM apartments WHERE civic_number = '2026-1')),
+    ((SELECT person_id FROM persons WHERE username = 'not_a_real_email'), (SELECT apartment_id FROM apartments WHERE civic_number = '2026-3')),
+    ((SELECT person_id FROM persons WHERE username = 'not_a_real_email'), (SELECT apartment_id FROM apartments WHERE civic_number = '2048-2')),
+    ((SELECT person_id FROM persons WHERE username = 'not_a_real_email'), (SELECT apartment_id FROM apartments WHERE civic_number = '2050-SS')),
+    ((SELECT person_id FROM persons WHERE username = 'not_a_real_email'), (SELECT apartment_id FROM apartments WHERE civic_number = '2056-3')),
+    ((SELECT person_id FROM persons WHERE username = 'not_a_real_email'), (SELECT apartment_id FROM apartments WHERE civic_number = '2068-3')),
+    ((SELECT person_id FROM persons WHERE username = 'not_a_real_email'), (SELECT apartment_id FROM apartments WHERE civic_number = '2082')),
+    ((SELECT person_id FROM persons WHERE username = 'not_a_real_email'), (SELECT apartment_id FROM apartments WHERE civic_number = '2090-1'));
 
 INSERT INTO committees
     (committee_name)
