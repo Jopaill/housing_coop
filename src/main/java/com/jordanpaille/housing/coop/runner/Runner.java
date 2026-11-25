@@ -1,7 +1,7 @@
 package com.jordanpaille.housing.coop.runner;
 
 import com.jordanpaille.housing.coop.dao.memberlist.MemberListDao;
-import com.jordanpaille.housing.coop.entity.Member;
+import com.jordanpaille.housing.coop.entity.MemberDoc;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -26,10 +26,10 @@ public class Runner implements CommandLineRunner {
         log.info(del);
         log.info(del);
         log.info(del);
-        List<Member> list = memberListDao.getMemberList();
+        List<MemberDoc> list = memberListDao.getMemberList();
         log.info("The size of list is: {}", list.size());
 
-        for (Member row : list) {
+        for (MemberDoc row : list) {
             log.info(row.toString());
             log.info(del);
         }

@@ -1,6 +1,7 @@
 package com.jordanpaille.housing.coop.controller;
 
 import com.jordanpaille.housing.coop.dao.memberlist.MemberListDao;
+import com.jordanpaille.housing.coop.services.memberlist.MemberListService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainPageController {
 
-    private final MemberListDao memberListDao;
+    private final MemberListService memberListService;
 
     @GetMapping("/")
     public String root() {
@@ -25,7 +26,7 @@ public class MainPageController {
     @GetMapping("/membres")
     public String membres(Model model) {
         model.addAttribute("title", "Liste des membres");
-        model.addAttribute("members", memberListDao.getMemberList());
+        model.addAttribute("members", memberListService.getMemberList());
         return "secure/members";
     }
 

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.*;
 
 @Slf4j
-public record Member(
+public record MemberDoc(
         String civicNumber,
         String firstName,
         String lastName,
@@ -84,8 +84,8 @@ public record Member(
             return this;
         }
 
-        public Member build() {
-            return new Member(
+        public MemberDoc build() {
+            return new MemberDoc(
                     builderCivicNumber,
                     builderFirstName,
                     builderLastName,
