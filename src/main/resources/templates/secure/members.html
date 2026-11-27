@@ -75,9 +75,9 @@
                                 <span class="min-w-0 truncate" th:text="${member.admin}"></span>
                             </p>
                             <div class="flex min-w-0 items-center gap-2">
-                                <p class="text-1xl min-w-0 flex-1 truncate" th:if="${member.isEmpty == true}">⚒️ Vide / Rénovation</p>
-                                <p class="text-1xl min-w-0 flex-1 truncate" th:if="${member.isEmpty == false and member.isMember == true}" th:text="|🏘️ ${member.firstName} ${member.lastName}|"></p>
-                                <p class="min-w-0 flex-1 truncate text-sm" th:if="${member.isEmpty == false and member.isMember == false}">⛷️ Locataire Externe</p>
+                                <p class="text-1xl min-w-0 flex-1 truncate" th:if="${member.isEmpty == true}">Vide / Rénovation</p>
+                                <p class="text-1xl min-w-0 flex-1 truncate" th:if="${member.isEmpty == false and member.isMember == true}" th:text="|${member.firstName} ${member.lastName}|"></p>
+                                <p class="min-w-0 flex-1 truncate text-sm" th:if="${member.isEmpty == false and member.isMember == false}">Locataire Externe</p>
                                 <p class="text-1xl w-18 flex-none" th:text="${member.civicNumber}"></p>
                             </div>
                             <div class="flex items-center">
@@ -98,7 +98,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div th:if="${member.isEmpty == false}" class="member-actions relative flex flex-none items-center self-stretch border-l border-gray-300 group-data-[selected=true]:border-[var(--coop-green-700)]">
+                        <div th:if="${member.isEmpty == false and member.isMember == true}" class="member-actions relative flex flex-none items-center self-stretch border-l border-gray-300 group-data-[selected=true]:border-[var(--coop-green-700)]">
                             <button
                                 th:if="${member.isMember == true}"
                                 type="button"
@@ -116,6 +116,15 @@
                                 <a th:if="${member.email != null and !#strings.isEmpty(member.email)}" th:href="|mailto:${member.email}|" class="block px-3 py-2 hover:bg-indigo-50">Envoyer un courriel</a>
                                 <button th:if="${member.phone != null and !#strings.isEmpty(member.phone)}" type="button" class="member-copy-action block w-full px-3 py-2 text-left hover:bg-indigo-50" th:attr="data-copy-text=${member.phone}" data-copy-label="Copier numéro">Copier numéro</button>
                                 <button th:if="${member.email != null and !#strings.isEmpty(member.email)}" type="button" class="member-copy-action block w-full px-3 py-2 text-left hover:bg-indigo-50" th:attr="data-copy-text=${member.email}" data-copy-label="Copier courriel">Copier courriel</button>
+                            </div>
+                        </div>
+                        <div
+                            th:if="${member.isEmpty == true or member.isMember == false}"
+                            class="member-actions relative flex flex-none items-center self-stretch border-l border-gray-300 group-data-[selected=true]:border-[var(--coop-green-700)]"
+                        >
+                            <div class="flex w-10 flex-none items-center justify-center self-stretch">
+                                <p th:if="${member.isEmpty == true}" class="m-0 text-center leading-none">⚒️</p>
+                                <p th:if="${member.isEmpty == false and member.isMember == false}" class="m-0 text-center leading-none">⛷️</p>
                             </div>
                         </div>
                     </li>

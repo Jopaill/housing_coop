@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -18,6 +20,7 @@ public class DevelopmentAccountInitializer implements ApplicationRunner {
 
     private final JdbcUserDetailsManager jdbcUserDetailsManager;
     private final PasswordEncoder passwordEncoder;
+    private final NamedParameterJdbcTemplate jdbc;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -33,6 +36,22 @@ public class DevelopmentAccountInitializer implements ApplicationRunner {
                     .password(encodedPassword)
                     .authorities("ROLE_USER")
                     .build());
+        }
+
+        MapSqlParameterSource params = new MapSqlParameterSource("username", username);
+        int updatedRows = jdbc.update("""
+                UPDATE persons
+                SET is_member = TRUE
+                WHERE username = :username
+                """, params);
+        if (updatedRows == 0) {
+            jdbc.update("""
+                    INSERT INTO persons (username, first_name, last_name, is_member)
+                    VALUES (:username, 'Jordan', 'Paille', TRUE)
+                    """, params);
+            log.info("Created member profile for user {}", username);
+        } else {
+            log.info("Ensured member profile for user {}", username);
         }
     }
 

@@ -30,7 +30,7 @@
                             <span aria-hidden="true"> · </span>
                             <time th:datetime="${announcement.publishedAt}" th:text="${#temporals.format(announcement.publishedAt, 'd MMMM yyyy', new java.util.Locale('fr'))}">25 novembre 2026</time>
                         </p>
-                        <div class="announcement-body space-y-4" th:utext="${announcement.bodyHtml}"></div>
+                        <div class="announcement-body announcement-markdown" th:utext="${announcement.bodyHtml}"></div>
                         <button type="button" class="announcement-toggle rounded-full px-3 py-1 text-xl" aria-expanded="false" aria-label="Afficher la suite de l'annonce" hidden>...</button>
                     </article>
                     <p th:if="${#lists.isEmpty(announcements)}" class="m-2 w-full text-center">Aucune annonce pour le moment.</p>
@@ -38,16 +38,7 @@
             </section>
         </main>
 
-        <dialog id="announcement-dialog" class="announcement-dialog" th:if="${canPublishPost}" th:attr="data-open=${openAnnouncementDialog}" aria-labelledby="announcement-dialog-title">
-            <div class="announcement-dialog-header">
-                <h2 id="announcement-dialog-title" class="font-serif text-2xl font-semibold">Écrire une annonce</h2>
-                <button id="close-announcement-dialog" type="button" class="rounded-lg border p-2" aria-label="Annuler l'écriture" title="Annuler l'écriture">
-                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-                        <path d="M6 6l12 12M18 6L6 18" stroke-width="2" stroke-linecap="round" />
-                    </svg>
-                </button>
-            </div>
-
+        <dialog id="announcement-dialog" class="announcement-dialog" th:if="${canPublishPost}" th:attr="data-open=${openAnnouncementDialog}" aria-label="Écrire une annonce">
             <p th:if="${announcementError}" class="announcement-form-error" role="alert" th:text="${announcementError}"></p>
 
             <form id="announcement-form" method="post" th:action="@{/home/announcements}">
@@ -58,7 +49,7 @@
                     <p id="announcement-title-help" class="announcement-field-help">40 caractères maximum.</p>
                 </div>
 
-                <div class="announcement-form-field">
+                <div class="announcement-form-field announcement-body-field">
                     <div class="announcement-body-label">
                         <label for="announcement-body-markdown">Texte</label>
                         <output id="announcement-body-count" aria-live="polite" hidden></output>
@@ -70,19 +61,24 @@
                             <button type="button" data-markdown-action="bullets" title="Liste à puces">• Liste</button>
                             <button type="button" data-markdown-action="numbered" title="Liste numérotée">1. Liste</button>
                         </div>
-                        <textarea id="announcement-body-markdown" name="bodyMarkdown" maxlength="4000" required
+                        <textarea id="announcement-body-markdown" name="bodyMarkdown" rows="5" maxlength="4000" required
                                   aria-describedby="announcement-body-help"
                                   th:text="${draftBody}"></textarea>
                     </div>
                     <p id="announcement-editor-error" class="announcement-form-error" role="alert" hidden></p>
-                    <div id="announcement-markdown-preview" class="announcement-preview space-y-4" hidden></div>
+                    <div id="announcement-markdown-preview" class="announcement-preview announcement-markdown" hidden></div>
                     <p id="announcement-body-help" class="announcement-field-help">Markdown · 4 000 caractères maximum.</p>
                     <p id="announcement-preview-error" class="announcement-form-error" role="alert" hidden></p>
                 </div>
 
                 <div class="announcement-form-footer">
-                    <button id="announcement-preview-toggle" type="button" aria-pressed="false">Aperçu</button>
                     <button id="announcement-publish-button" type="submit" class="rounded-lg border px-3 py-2">Publier</button>
+                    <button id="announcement-preview-toggle" type="button" aria-pressed="false">Aperçu</button>
+                    <button id="close-announcement-dialog" type="button" class="rounded-lg border p-2" aria-label="Annuler l'écriture" title="Annuler l'écriture" autofocus>
+                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                            <path d="M6 6l12 12M18 6L6 18" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                    </button>
                 </div>
             </form>
         </dialog>

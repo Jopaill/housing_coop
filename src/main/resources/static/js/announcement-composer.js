@@ -1,7 +1,6 @@
 const announcementDialog = document.getElementById("announcement-dialog");
 const openAnnouncementDialogButton = document.getElementById("open-announcement-dialog");
 const closeAnnouncementDialogButton = document.getElementById("close-announcement-dialog");
-const announcementTitle = document.getElementById("announcement-title");
 const announcementBody = document.getElementById("announcement-body-markdown");
 const announcementBodyCount = document.getElementById("announcement-body-count");
 const markdownEditor = document.getElementById("announcement-markdown-editor");
@@ -13,7 +12,6 @@ const markdownEditorError = document.getElementById("announcement-editor-error")
 if (announcementDialog instanceof HTMLDialogElement) {
     openAnnouncementDialogButton.addEventListener("click", () => {
         announcementDialog.showModal();
-        announcementTitle.focus();
     });
 
     closeAnnouncementDialogButton.addEventListener("click", () => {
@@ -22,7 +20,6 @@ if (announcementDialog instanceof HTMLDialogElement) {
 
     if (announcementDialog.dataset.open === "true") {
         announcementDialog.showModal();
-        announcementTitle.focus();
     }
 
     const updateBodyCount = () => {
@@ -31,11 +28,18 @@ if (announcementDialog instanceof HTMLDialogElement) {
         announcementBodyCount.textContent = `${characterCount} / 4 000 caractères`;
     };
 
+    const resizeAnnouncementBody = () => {
+        announcementBody.style.height = "auto";
+        announcementBody.style.height = `${announcementBody.scrollHeight}px`;
+    };
+
     announcementBody.addEventListener("input", () => {
         markdownEditorError.hidden = true;
         updateBodyCount();
+        resizeAnnouncementBody();
     });
     updateBodyCount();
+    resizeAnnouncementBody();
 
     const applyMarkdownEdit = (replacement, start, end, selectionStart, selectionEnd) => {
         const nextValue = announcementBody.value.slice(0, start) + replacement + announcementBody.value.slice(end);

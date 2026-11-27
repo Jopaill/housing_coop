@@ -7,6 +7,8 @@ import com.jordanpaille.housing.coop.entity.AnnouncementDoc;
 import com.jordanpaille.housing.coop.entity.PersonName;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.commonmark.node.Heading;
+import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.owasp.html.HtmlPolicyBuilder;
@@ -64,6 +66,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         if (bodyMarkdown.length() > MAX_BODY_LENGTH) {
             throw new IllegalArgumentException("Le texte ne peut pas dépasser 4 000 caractères.");
         }
+        validateNoHeadings(bodyMarkdown);
 
         return renderSafeMarkdown(bodyMarkdown);
     }
@@ -82,6 +85,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         if (bodyMarkdown.length() > MAX_BODY_LENGTH) {
             throw new IllegalArgumentException("Le texte ne peut pas dépasser 4 000 caractères.");
         }
+        validateNoHeadings(bodyMarkdown);
         if (username == null || username.isBlank()) {
             throw new IllegalArgumentException("Le compte connecté est introuvable.");
         }
@@ -122,5 +126,20 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     private String renderSafeMarkdown(String bodyMarkdown) {
         String renderedMarkdown = HTML_RENDERER.render(MARKDOWN_PARSER.parse(bodyMarkdown));
         return HTML_POLICY.sanitize(renderedMarkdown);
+    }
+
+    private void validateNoHeadings(String bodyMarkdown) {
+        if (containsHeading(MARKDOWN_PARSER.parse(bodyMarkdown))) {
+            throw new IllegalArgumentException("Les titres Markdown ne sont pas autorisés dans le texte de l'annonce.");
+        }
+    }
+
+    private boolean containsHeading(Node parent) {
+        for (Node child = parent.getFirstChild(); child != null; child = child.getNext()) {
+            if (child instanceof Heading || containsHeading(child)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
