@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public record AnnouncementDoc(
         LocalDate publishedAt,
-        String author,
+        String authorName,
         String title,
         String bodyHtml
 ) {
