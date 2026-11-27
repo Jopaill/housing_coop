@@ -23,7 +23,7 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
                 SELECT
                     announcement_id,
                     published_at,
-                    author,
+                    author_name,
                     title,
                     body_markdown
                 FROM
@@ -40,7 +40,7 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
                 announcements.add(new Announcement(
                         rs.getLong("announcement_id"),
                         rs.getDate("published_at").toLocalDate(),
-                        rs.getString("author"),
+                        rs.getString("author_name"),
                         rs.getString("title"),
                         rs.getString("body_markdown")
                 ));
@@ -54,13 +54,13 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
     public void insertAnnouncement(LocalDate publishedAt, String author, String title, String bodyMarkdown) {
         String sql = """
                 INSERT INTO announcements
-                    (published_at, author, title, body_markdown)
+                    (published_at, author_name, title, body_markdown)
                 VALUES
-                    (:published_at, :author, :title, :body_markdown)
+                    (:published_at, :author_name, :title, :body_markdown)
                 """;
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("published_at", Date.valueOf(publishedAt))
-                .addValue("author", author)
+                .addValue("author_name", author)
                 .addValue("title", title)
                 .addValue("body_markdown", bodyMarkdown);
 

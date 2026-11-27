@@ -109,7 +109,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     private AnnouncementDoc toAnnouncementDoc(Announcement announcement) {
         if (announcement.publishedAt() == null
-                || announcement.author() == null
+                || announcement.authorName() == null
                 || announcement.title() == null
                 || announcement.bodyMarkdown() == null) {
             throw new IllegalArgumentException("Announcement fields must not be null");
@@ -117,7 +117,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
         return new AnnouncementDoc(
                 announcement.publishedAt(),
-                announcement.author(),
+                announcement.authorName(),
                 announcement.title(),
                 renderSafeMarkdown(announcement.bodyMarkdown())
         );

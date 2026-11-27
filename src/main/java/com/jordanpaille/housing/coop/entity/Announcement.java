@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public record Announcement(
         long id,
         LocalDate publishedAt,
-        String author,
+        String authorName,
         String title,
         String bodyMarkdown
 ) {
