@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -57,12 +58,58 @@ public class MainPageController {
         return "redirect:/home";
     }
 
-    @DeleteMapping("/home/announcements/{id}")
-    public ResponseEntity<Void> deleteAnnouncementById(@PathVariable long id) {
-        if (!announcementService.deletePostById(id)) {
+    @GetMapping("/canModifyAnnouncement")
+    public ResponseEntity<Boolean> canModifyAnnouncement(
+            @RequestParam("id") long id,
+            Authentication authentication) {
+        boolean canModify = announcementService.canModifyAnnouncementById(id, authentication.getName());
+        return ResponseEntity.ok(canModify);
+    }
+
+    @PutMapping("/modifyAnnouncementById")
+    public ResponseEntity<Void> modifyAnnouncementById(
+            @RequestParam("id") long id,
+            @RequestParam(name = "title", required = false) String title,
+            @RequestParam(name = "bodyMarkdown", required = false) String bodyMarkdown,
+            Authentication authentication) {
+        if (!announcementService.canModifyAnnouncementById(id, authentication.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        try {
+            if (!announcementService.modifyAnnouncementById(id, title, bodyMarkdown, authentication.getName())) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException exception) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/deleteAnnouncementById")
+    public ResponseEntity<Void> deleteAnnouncementById(
+            @RequestParam("id") long id,
+            Authentication authentication) {
+        if (!announcementService.canModifyAnnouncementById(id, authentication.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        if (!announcementService.deleteAnnouncementById(id, authentication.getName())) {
             return ResponseEntity.notFound().build();
         }
 
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/home/announcements/{id}")
+    public ResponseEntity<Void> deleteHomeAnnouncementById(
+            @PathVariable long id,
+            Authentication authentication) {
+        if (!announcementService.canModifyAnnouncementById(id, authentication.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        if (!announcementService.deleteAnnouncementById(id, authentication.getName())) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.noContent().build();
     }
 

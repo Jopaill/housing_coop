@@ -12,6 +12,12 @@ public interface AnnouncementService {
 
     void publishPost(String title, String bodyMarkdown, String username);
 
+    boolean canModifyAnnouncementById(long id, String username);
+
+    boolean modifyAnnouncementById(long id, String title, String bodyMarkdown, String username);
+
+    boolean deleteAnnouncementById(long id, String username);
+
     boolean deletePostById(long id);
 
     boolean canPublishPost(String username);

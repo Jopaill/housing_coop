@@ -22,7 +22,15 @@
                 </div>
                 <p th:if="${announcementSuccess}" class="mx-3 text-center" role="status" th:text="${announcementSuccess}"></p>
                 <div class="flex flex-col items-center px-3">
-                    <article th:each="announcement : ${announcements}" class="m-2 w-full space-y-4 rounded-3xl border-2 p-4">
+                    <p id="announcement-action-status" class="announcement-action-status mx-3 mb-2 text-center" role="alert" hidden></p>
+                    <article th:each="announcement : ${announcements}"
+                             class="announcement-row relative m-2 w-full cursor-pointer space-y-4 rounded-3xl border-2 p-4"
+                             data-selected="false"
+                             th:attr="data-announcement-id=${announcement.id},data-announcement-title=${announcement.title},data-announcement-body=${announcement.bodyMarkdown}"
+                             role="button"
+                             tabindex="0"
+                             aria-pressed="false">
+                        <button type="button" class="announcement-modification-button" aria-label="Modifier cette annonce" hidden>Modification</button>
                         <h3 class="font-display mb-1 text-2xl" th:text="${announcement.title}">Titre de l'annonce</h3>
                         <p class="text-sm text-gray-600">
                             <span th:text="${announcement.authorName}">Auteur</span>
@@ -30,7 +38,6 @@
                             <time th:datetime="${announcement.publishedAt}" th:text="${#temporals.format(announcement.publishedAt, 'd MMMM yyyy', new java.util.Locale('fr'))}">25 novembre 2026</time>
                         </p>
                         <div class="announcement-body announcement-markdown" th:utext="${announcement.bodyHtml}"></div>
-                        <button type="button" class="announcement-toggle rounded-full px-3 py-1 text-xl" aria-expanded="false" aria-label="Afficher la suite de l'annonce" hidden>...</button>
                     </article>
                     <p th:if="${#lists.isEmpty(announcements)}" class="m-2 w-full text-center">Aucune annonce pour le moment.</p>
                 </div>
@@ -78,6 +85,32 @@
                             <path d="M6 6l12 12M18 6L6 18" stroke-width="2" stroke-linecap="round" />
                         </svg>
                     </button>
+                </div>
+            </form>
+        </dialog>
+
+        <dialog id="announcement-edit-dialog" class="announcement-dialog" aria-label="Modifier une annonce">
+            <form id="announcement-edit-form">
+                <div class="announcement-form-field">
+                    <label for="announcement-edit-title">Titre</label>
+                    <input id="announcement-edit-title" name="title" type="text" maxlength="40" required />
+                    <p class="announcement-field-help">40 caractères maximum.</p>
+                </div>
+
+                <div class="announcement-form-field announcement-body-field">
+                    <div class="announcement-body-label">
+                        <label for="announcement-edit-body">Texte</label>
+                    </div>
+                    <textarea id="announcement-edit-body" name="bodyMarkdown" rows="12" maxlength="4000" required></textarea>
+                    <p class="announcement-field-help">Markdown · 4 000 caractères maximum.</p>
+                </div>
+
+                <p id="announcement-edit-status" class="announcement-form-error" role="alert" hidden></p>
+
+                <div class="announcement-edit-footer">
+                    <button id="announcement-update-button" type="submit" class="announcement-update-button">Modifier</button>
+                    <button id="announcement-delete-button" type="button" class="announcement-delete-button">Supprimer</button>
+                    <button id="announcement-edit-close" type="button" aria-label="Fermer la modification">Annuler</button>
                 </div>
             </form>
         </dialog>

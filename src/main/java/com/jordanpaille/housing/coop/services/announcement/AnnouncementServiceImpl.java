@@ -102,6 +102,47 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
+    public boolean canModifyAnnouncementById(long id, String username) {
+        if (username == null || username.isBlank()) {
+            return false;
+        }
+
+        return announcementDao.findAnnouncementById(id)
+                .map(announcement -> username.equals(announcement.authorEmail()))
+                .orElse(false);
+    }
+
+    @Override
+    public boolean modifyAnnouncementById(long id, String title, String bodyMarkdown, String username) {
+        if (!canModifyAnnouncementById(id, username)) {
+            return false;
+        }
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Le titre est obligatoire.");
+        }
+        if (title.length() > MAX_TITLE_LENGTH) {
+            throw new IllegalArgumentException("Le titre ne peut pas dépasser 40 caractères.");
+        }
+        if (bodyMarkdown == null || bodyMarkdown.isBlank()) {
+            throw new IllegalArgumentException("Le texte est obligatoire.");
+        }
+        if (bodyMarkdown.length() > MAX_BODY_LENGTH) {
+            throw new IllegalArgumentException("Le texte ne peut pas dépasser 4 000 caractères.");
+        }
+        validateNoHeadings(bodyMarkdown);
+
+        return announcementDao.updateAnnouncementById(id, title.strip(), bodyMarkdown);
+    }
+
+    @Override
+    public boolean deleteAnnouncementById(long id, String username) {
+        if (!canModifyAnnouncementById(id, username)) {
+            return false;
+        }
+        return announcementDao.deleteAnnouncementById(id);
+    }
+
+    @Override
     public boolean deletePostById(long id) {
         return announcementDao.deleteAnnouncementById(id);
     }
@@ -126,7 +167,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
                 announcement.publishedAt(),
                 announcement.authorName(),
                 announcement.title(),
-                renderSafeMarkdown(announcement.bodyMarkdown())
+                renderSafeMarkdown(announcement.bodyMarkdown()),
+                announcement.bodyMarkdown()
         );
     }
 

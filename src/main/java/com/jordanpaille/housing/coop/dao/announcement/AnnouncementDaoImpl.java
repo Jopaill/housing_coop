@@ -10,6 +10,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Repository
@@ -24,6 +25,7 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
                     announcement_id,
                     published_at,
                     author_name,
+                    author_email,
                     title,
                     body_markdown
                 FROM
@@ -41,6 +43,7 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
                         rs.getLong("announcement_id"),
                         rs.getDate("published_at").toLocalDate(),
                         rs.getString("author_name"),
+                        rs.getString("author_email"),
                         rs.getString("title"),
                         rs.getString("body_markdown")
                 ));
@@ -71,6 +74,56 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
                 .addValue("body_markdown", bodyMarkdown);
 
         jdbc.update(sql, params);
+    }
+
+    @Override
+    public Optional<Announcement> findAnnouncementById(long id) {
+        String sql = """
+                SELECT
+                    announcement_id,
+                    published_at,
+                    author_name,
+                    author_email,
+                    title,
+                    body_markdown
+                FROM announcements
+                WHERE announcement_id = :announcement_id
+                """;
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("announcement_id", id);
+
+        List<Announcement> matches = jdbc.query(sql, params, rs -> {
+            List<Announcement> announcements = new ArrayList<>();
+            if (rs.next()) {
+                announcements.add(new Announcement(
+                        rs.getLong("announcement_id"),
+                        rs.getDate("published_at").toLocalDate(),
+                        rs.getString("author_name"),
+                        rs.getString("author_email"),
+                        rs.getString("title"),
+                        rs.getString("body_markdown")
+                ));
+            }
+            return announcements;
+        });
+
+        return matches.stream().findFirst();
+    }
+
+    @Override
+    public boolean updateAnnouncementById(long id, String title, String bodyMarkdown) {
+        String sql = """
+                UPDATE announcements
+                SET title = :title,
+                    body_markdown = :body_markdown
+                WHERE announcement_id = :announcement_id
+                """;
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("title", title)
+                .addValue("body_markdown", bodyMarkdown)
+                .addValue("announcement_id", id);
+
+        return jdbc.update(sql, params) > 0;
     }
 
     @Override

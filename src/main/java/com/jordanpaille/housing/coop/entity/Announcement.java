@@ -6,6 +6,7 @@ public record Announcement(
         long id,
         LocalDate publishedAt,
         String authorName,
+        String authorEmail,
         String title,
         String bodyMarkdown
 ) {

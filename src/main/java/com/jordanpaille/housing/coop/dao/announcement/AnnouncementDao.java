@@ -4,6 +4,7 @@ import com.jordanpaille.housing.coop.entity.Announcement;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface AnnouncementDao {
 
@@ -15,6 +16,10 @@ public interface AnnouncementDao {
             String username,
             String title,
             String bodyMarkdown);
+
+    Optional<Announcement> findAnnouncementById(long id);
+
+    boolean updateAnnouncementById(long id, String title, String bodyMarkdown);
 
     boolean deleteAnnouncementById(long id);
 }

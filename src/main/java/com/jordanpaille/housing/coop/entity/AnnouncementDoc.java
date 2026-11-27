@@ -7,6 +7,7 @@ public record AnnouncementDoc(
         LocalDate publishedAt,
         String authorName,
         String title,
-        String bodyHtml
+        String bodyHtml,
+        String bodyMarkdown
 ) {
 }

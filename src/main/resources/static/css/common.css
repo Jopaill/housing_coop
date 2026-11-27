@@ -231,13 +231,54 @@ a:focus-visible {
     pointer-events: none;
 }
 
-.announcement-toggle {
-    align-self: center;
+.announcement-row {
+    transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
 }
 
-.announcement-toggle:focus-visible {
+.announcement-row:focus-visible {
     outline: 2px solid var(--coop-orange-600);
     outline-offset: 2px;
+}
+
+.announcement-modification-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    border: 1px solid currentColor;
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    background: var(--coop-pink-400);
+    color: var(--coop-green-700);
+    font-size: 0.875rem;
+}
+
+.announcement-row[data-selected="true"] .announcement-modification-button {
+    background: var(--coop-pink-400);
+    color: var(--coop-green-700);
+}
+
+.announcement-action-status {
+    width: 100%;
+    color: #b91c1c;
+}
+
+.announcement-row[data-selected="true"] {
+    border-color: var(--coop-green-700);
+    background: var(--coop-green-700);
+    color: var(--coop-pink-400);
+}
+
+.announcement-row[data-selected="true"] :is(h3, p, time, span, li),
+.announcement-row[data-selected="true"] .text-gray-600,
+.announcement-row[data-selected="true"] .announcement-markdown :is(h1, h2, h3, h4, h5, h6) {
+    color: var(--coop-pink-400);
+}
+
+.announcement-row[data-selected="true"] .announcement-body--collapsed::after {
+    background: linear-gradient(transparent, var(--coop-green-700));
 }
 
 .home-announcements-heading {
@@ -305,6 +346,53 @@ a:focus-visible {
 
 #close-announcement-dialog {
     justify-self: end;
+}
+
+#announcement-edit-form {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+}
+
+#announcement-edit-body {
+    flex: 1 1 auto;
+    min-height: 12rem;
+    resize: none;
+}
+
+#announcement-edit-title,
+#announcement-edit-body {
+    width: 100%;
+    border: 1px solid var(--coop-orange-400);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    background: white;
+    color: var(--coop-green-700);
+}
+
+.announcement-edit-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: auto;
+}
+
+.announcement-edit-footer button {
+    border: 1px solid var(--coop-orange-400);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.announcement-update-button {
+    background: var(--coop-green-100);
+    color: var(--coop-green-700);
+}
+
+.announcement-delete-button {
+    background: #fee2e2;
+    border-color: #fecaca;
+    color: #b91c1c;
 }
 
 .announcement-form-field {
