@@ -3,6 +3,7 @@ package com.jordanpaille.housing.coop.controller;
 import com.jordanpaille.housing.coop.services.announcement.AnnouncementService;
 import com.jordanpaille.housing.coop.services.memberlist.MemberListService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @AllArgsConstructor
+@Slf4j
 @Controller
 public class MainPageController {
 
@@ -28,6 +30,7 @@ public class MainPageController {
 
     @GetMapping("/home")
     public String helloWorld(Model model, Authentication authentication) {
+        log.info("PageAccess: '/home' for '{}'", authentication.getName());
         model.addAttribute("announcements", announcementService.getAnnouncements());
         model.addAttribute("canPublishPost", announcementService.canPublishPost(authentication.getName()));
         return "secure/home";
@@ -74,14 +77,16 @@ public class MainPageController {
     }
 
     @GetMapping("/membres")
-    public String membres(Model model) {
+    public String membres(Model model, Authentication authentication) {
+        log.info("PageAccess: '/membres' for '{}'", authentication.getName());
         model.addAttribute("title", "Liste des membres");
         model.addAttribute("members", memberListService.getMemberList());
         return "secure/members";
     }
 
     @GetMapping("/politiques")
-    public String politiques(Model model) {
+    public String politiques(Model model, Authentication authentication) {
+        log.info("PageAccess: '/politiques' for '{}'", authentication.getName());
         model.addAttribute("title", "Politiques");
         return "secure/politiques";
     }

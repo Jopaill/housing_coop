@@ -23,7 +23,7 @@ public class MemberListServiceImpl implements MemberListService {
         List<MemberDto> rawMemberList = memberListDao.getMemberList();
 
         List<MemberDoc> toReturn = memberDtoTransformer.transformMemberDtoList(rawMemberList);
-        log.info("MemberListServiceImpl getMemberList: rawMemberList={}", rawMemberList);
+        log.debug("MemberListServiceImpl getMemberList: rawMemberList={}", rawMemberList);
 
         return toReturn;
     }
