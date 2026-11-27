@@ -72,4 +72,13 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
 
         jdbc.update(sql, params);
     }
+
+    @Override
+    public boolean deleteAnnouncementById(long id) {
+        String sql = "DELETE FROM announcements WHERE announcement_id = :announcement_id";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("announcement_id", id);
+
+        return jdbc.update(sql, params) > 0;
+    }
 }

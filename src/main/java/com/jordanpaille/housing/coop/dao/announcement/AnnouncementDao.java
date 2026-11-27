@@ -15,4 +15,6 @@ public interface AnnouncementDao {
             String username,
             String title,
             String bodyMarkdown);
+
+    boolean deleteAnnouncementById(long id);
 }

@@ -102,6 +102,11 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
+    public boolean deletePostById(long id) {
+        return announcementDao.deleteAnnouncementById(id);
+    }
+
+    @Override
     public boolean canPublishPost(String username) {
         return username != null
                 && !username.isBlank()
@@ -117,6 +122,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         }
 
         return new AnnouncementDoc(
+                announcement.id(),
                 announcement.publishedAt(),
                 announcement.authorName(),
                 announcement.title(),
