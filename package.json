@@ -1,5 +1,9 @@
 {
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/main/resources/static/css/common.css -o ./build/generated/tailwind/static/css/app.min.css --minify"
+  },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4.3.3"

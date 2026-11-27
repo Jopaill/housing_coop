@@ -59,6 +59,32 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
+val tailwindResourcesDir = layout.buildDirectory.dir("generated/tailwind")
+val npmBuildTailwindCommand =
+	if (System.getProperty("os.name").startsWith("Windows")) {
+		listOf("cmd", "/c", "npm.cmd", "run", "build:css")
+	} else {
+		listOf("npm", "run", "build:css")
+	}
+
+val buildTailwind by tasks.registering(Exec::class) {
+	inputs.dir("src/main")
+	inputs.file("package.json")
+	inputs.file("package-lock.json")
+	outputs.file(tailwindResourcesDir.map { it.file("static/css/app.min.css") })
+	commandLine(npmBuildTailwindCommand)
+}
+
+sourceSets {
+	main {
+		resources.srcDir(tailwindResourcesDir)
+	}
+}
+
+tasks.named("processResources") {
+	dependsOn(buildTailwind)
+}
+
 tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
 	args("--spring.profiles.active=dev")
 	sourceResources(sourceSets["main"])
