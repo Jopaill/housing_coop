@@ -9,5 +9,10 @@ public interface AnnouncementDao {
 
     List<Announcement> getAnnouncements();
 
-    void insertAnnouncement(LocalDate publishedAt, String author, String title, String bodyMarkdown);
+    void insertAnnouncement(
+            LocalDate publishedAt,
+            String authorName,
+            String username,
+            String title,
+            String bodyMarkdown);
 }

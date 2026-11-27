@@ -95,6 +95,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         announcementDao.insertAnnouncement(
                 LocalDate.now(),
                 author.firstName() + " " + author.lastName(),
+                username,
                 title.strip(),
                 bodyMarkdown
         );

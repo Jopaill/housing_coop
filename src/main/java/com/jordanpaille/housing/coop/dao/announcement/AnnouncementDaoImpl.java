@@ -51,16 +51,22 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
     }
 
     @Override
-    public void insertAnnouncement(LocalDate publishedAt, String author, String title, String bodyMarkdown) {
+    public void insertAnnouncement(
+            LocalDate publishedAt,
+            String authorName,
+            String username,
+            String title,
+            String bodyMarkdown) {
         String sql = """
                 INSERT INTO announcements
-                    (published_at, author_name, title, body_markdown)
+                    (published_at, author_name, author_email, title, body_markdown)
                 VALUES
-                    (:published_at, :author_name, :title, :body_markdown)
+                    (:published_at, :author_name, :author_email, :title, :body_markdown)
                 """;
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("published_at", Date.valueOf(publishedAt))
-                .addValue("author_name", author)
+                .addValue("author_name", authorName)
+                .addValue("author_email", username)
                 .addValue("title", title)
                 .addValue("body_markdown", bodyMarkdown);
 
